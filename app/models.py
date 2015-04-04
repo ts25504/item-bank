@@ -28,7 +28,7 @@ class SingleChoice(db.Model):
     __tablename__ = 'single_choice'
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text())
-    difficult_level = db.Column(db.Enum('A', 'B', 'C', 'D', 'E'))
+    difficult_level = db.Column(db.Enum('A', 'B', 'C', 'D', 'E'), default='C')
     add_date = db.Column(db.DateTime(), default=datetime.utcnow)
     faq = db.Column(db.Text())
     score = db.Column(db.Integer)

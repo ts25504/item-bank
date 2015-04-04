@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Single Choice{% endblock %}
+{% block page_content %}
+<h1 class="page-header">SingleChoice</h1>
+<ul class="posts">
+    {% for sc in single_choice %}
+    <li class="post">
+        <div class="post-content">
+            <div class="post-date">{{ sc.add_date }}</br><span class="label label-primary">Difficult Level: {{ sc.difficult_level }}</span></div>
+            <div class="post-author">{{ sc.id }} {{ sc.question }}</div>
+            <div class="post-body">
+                {{ sc.A }}</br>
+                {{ sc.B }}</br>
+                {{ sc.C }}</br>
+                {{ sc.D }}</br>
+            </div>
+            <div class="post-footer">
+                <a href="{{ url_for('main.edit_single_choice', id=sc.id) }}">
+                    <span class="label label-primary">Edit</span>
+                </a>
+                <a href="">
+                    <span class="label label-default">Delete</span>
+                </a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{{ wtf.quick_form(form) }}
+{% endblock %}
