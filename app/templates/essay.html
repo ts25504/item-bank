@@ -8,10 +8,16 @@
     {% for es in essay %}
     <li class="post">
         <div class="post-content">
-            <div class="post-date">{{ es.add_date }} <span class="label label-primary">Difficult Level: {{ es.difficult_level }}</span></div>
-            <div class="post-author">{{ es.id }}. {{ es.question }}</div>
+            <div class="post-date">
+                <span class="label label-primary">{{ es.add_date }}</span>
+                <span class="label label-primary">Difficult Level: {{ es.difficult_level }}</span>
+                <span class="label label-primary">Score: {{ es.score }}</span>
+            </div>
+            <div class="post-author">{{ es.id }}. {% if es.question_html %} {{ es.question_html | safe }} {% else %} {{ es.question }} {% endif %}</div>
             <div class="post-body">
-                Answer: {{ es.answer }}
+                </br>
+                Answer: {% if es.answer_html %}{{ es.answer_html | safe }} {% else %} {{ es.answer }} {% endif %}</br>
+                Faq: {% if es.faq_html %}{{ es.faq_html | safe }} {% else %} {{ es.faq }} {% endif %}</br>
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_essay', id=es.id) }}">

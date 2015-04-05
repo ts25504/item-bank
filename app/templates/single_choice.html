@@ -8,14 +8,20 @@
     {% for sc in single_choice %}
     <li class="post">
         <div class="post-content">
-            <div class="post-date">{{ sc.add_date }}</br><span class="label label-primary">Difficult Level: {{ sc.difficult_level }}</span></div>
-            <div class="post-author">{{ sc.id }}. {{ sc.question }}</div>
+            <div class="post-date">
+                <span class="label label-primary">{{ sc.add_date }}</span>
+                <span class="label label-primary">Difficult Level: {{ sc.difficult_level }}</span>
+                <span class="label label-primary">Score: {{ sc.score }}</span>
+            </div>
+            <div class="post-author">{{ sc.id }}. {% if sc.question_html %}{{ sc.question_html | safe }} {% else %} {{ sc.question }} {% endif %}</div>
             <div class="post-body">
                 A: {{ sc.A }}</br>
                 B: {{ sc.B }}</br>
                 C: {{ sc.C }}</br>
                 D: {{ sc.D }}</br>
-                Answer: {{ sc.answer}}
+                </br>
+                Answer: {{ sc.answer }}</br>
+                Faq: {% if sc.faq_html %} {{ sc.faq_html | safe }} {% else %} {{ sc.faq }} {% endif %}</br>
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_single_choice', id=sc.id) }}">

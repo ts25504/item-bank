@@ -8,10 +8,16 @@
     {% for bf in blank_fill %}
     <li class="post">
         <div class="post-content">
-            <div class="post-date">{{ bf.add_date }} <span class="label label-primary">Difficult Level: {{ bf.difficult_level }}</span></div>
-            <div class="post-author">{{ bf.id }}. {{ bf.question }}</div>
+            <div class="post-date">
+                <span class="label label-primary">{{ bf.add_date }}</span>
+                <span class="label label-primary">Difficult Level: {{ bf.difficult_level }}</span>
+                <span class="label label-primary">Score: {{ bf.score }}</span>
+            </div>
+            <div class="post-author">{{ bf.id }}. {% if bf.question_html %} {{ bf.question_html | safe }} {% else %} {{ bf.question }} {% endif %}</div>
             <div class="post-body">
-                Answer: {{ bf.answer }}
+                </br>
+                Answer: {{ bf.answer }}</br>
+                Faq: {% if bf.faq_html %} {{ bf.faq_html | safe }} {% else %} {{ bf.faq }} {% endif %}</br>
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_blank_fill', id=bf.id) }}">
