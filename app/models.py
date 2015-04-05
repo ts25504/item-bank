@@ -31,7 +31,7 @@ class SingleChoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text)
     question_html = db.Column(db.Text)
-    difficult_level = db.Column(db.Enum('A', 'B', 'C', 'D', 'E'), default='C')
+    difficult_level = db.Column(db.Enum('A', 'B', 'C', 'D', 'E'))
     add_date = db.Column(db.Date, default=date.today)
     faq = db.Column(db.Text)
     faq_html = db.Column(db.Text)
@@ -48,7 +48,7 @@ class SingleChoice(db.Model):
     def on_changed_question(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img']
+                        'h1', 'h2', 'h3', 'p', 'img', 'br']
         attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
@@ -58,7 +58,7 @@ class SingleChoice(db.Model):
     def on_changed_faq(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img']
+                        'h1', 'h2', 'h3', 'p', 'img', 'br']
         attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
@@ -85,7 +85,7 @@ class BlankFill(db.Model):
     def on_changed_question(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img']
+                        'h1', 'h2', 'h3', 'p', 'img', 'br']
         attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
@@ -95,7 +95,7 @@ class BlankFill(db.Model):
     def on_changed_faq(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img']
+                        'h1', 'h2', 'h3', 'p', 'img', 'br']
         attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
@@ -123,7 +123,7 @@ class Essay(db.Model):
     def on_changed_question(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img']
+                        'h1', 'h2', 'h3', 'p', 'img', 'br']
         attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
@@ -133,7 +133,7 @@ class Essay(db.Model):
     def on_changed_faq(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img']
+                        'h1', 'h2', 'h3', 'p', 'img', 'br']
         attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
@@ -143,7 +143,7 @@ class Essay(db.Model):
     def on_changed_answer(target, value, oldvalue, initiator):
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img']
+                        'h1', 'h2', 'h3', 'p', 'img', 'br']
         attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.answer_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),

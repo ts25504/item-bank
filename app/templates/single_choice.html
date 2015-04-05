@@ -13,15 +13,26 @@
                 <span class="label label-primary">Difficult Level: {{ sc.difficult_level }}</span>
                 <span class="label label-primary">Score: {{ sc.score }}</span>
             </div>
-            <div class="post-author">{{ sc.id }}. {% if sc.question_html %}{{ sc.question_html | safe }} {% else %} {{ sc.question }} {% endif %}</div>
             <div class="post-body">
+                <div class="post-bold"><p>{{ sc.id }}.</p></div>
+                {% if sc.question_html %}
+                    {{ sc.question_html | safe }}
+                {% else %}
+                    {{ sc.question }}
+                {% endif %}
+                <p>
                 A: {{ sc.A }}</br>
                 B: {{ sc.B }}</br>
                 C: {{ sc.C }}</br>
                 D: {{ sc.D }}</br>
-                </br>
-                Answer: {{ sc.answer }}</br>
-                Faq: {% if sc.faq_html %} {{ sc.faq_html | safe }} {% else %} {{ sc.faq }} {% endif %}</br>
+                </p>
+                <div class="post-bold">[参考答案]</div> <p>{{ sc.answer }}</p>
+                <div class="post-bold">[解析]</div>
+                {% if sc.faq_html %}
+                    {{ sc.faq_html | safe }}
+                {% else %}
+                    {{ sc.faq }}
+                {% endif %}
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_single_choice', id=sc.id) }}">

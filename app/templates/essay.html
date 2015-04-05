@@ -13,11 +13,25 @@
                 <span class="label label-primary">Difficult Level: {{ es.difficult_level }}</span>
                 <span class="label label-primary">Score: {{ es.score }}</span>
             </div>
-            <div class="post-author">{{ es.id }}. {% if es.question_html %} {{ es.question_html | safe }} {% else %} {{ es.question }} {% endif %}</div>
             <div class="post-body">
-                </br>
-                Answer: {% if es.answer_html %}{{ es.answer_html | safe }} {% else %} {{ es.answer }} {% endif %}</br>
-                Faq: {% if es.faq_html %}{{ es.faq_html | safe }} {% else %} {{ es.faq }} {% endif %}</br>
+                <div class="post-bold"><p>{{ es.id }}.</p></div>
+                {% if es.question_html %}
+                    {{ es.question_html | safe }}
+                {% else %}
+                    {{ es.question }}
+                {% endif %}
+                <div class="post-bold">[参考答案]</div>
+                {% if es.answer_html %}
+                    {{ es.answer_html | safe }}
+                {% else %}
+                    {{ es.answer }}
+                {% endif %}
+                <div class="post-bold">[解析]</div>
+                {% if es.faq_html %}
+                    {{ es.faq_html | safe }}
+                {% else %}
+                    {{ es.faq }}
+                {% endif %}
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_essay', id=es.id) }}">

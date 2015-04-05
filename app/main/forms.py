@@ -14,7 +14,7 @@ class SingleChoiceForm(Form):
     score = IntegerField('score', validators=[Required()])
     difficult_level = SelectField('difficult_level',
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
-                ('E', 'E')])
+                ('E', 'E')], default='C')
     faq = PageDownField('faq')
     answer = SelectField('answer', choices=[('A', 'A'), ('B', 'B'),
         ('C', 'C'), ('D', 'D')], validators=[Required()])
@@ -24,7 +24,7 @@ class BlankFillForm(Form):
     question = PageDownField('New Question', validators=[Required()])
     difficult_level = SelectField('difficult_level',
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
-                ('E', 'E')])
+                ('E', 'E')], default='C')
     faq = PageDownField('faq')
     score = IntegerField('score', validators=[Required()])
     answer = StringField('answer', validators=[Required(), Length(1, 255)])
@@ -34,7 +34,7 @@ class EssayForm(Form):
     question = PageDownField('New Question', validators=[Required()])
     difficult_level = SelectField('difficult_level',
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
-                ('E', 'E')])
+                ('E', 'E')], default='C')
     faq = PageDownField('faq')
     score = IntegerField('score', validators=[Required()])
     answer = PageDownField('answer', validators=[Required()])
