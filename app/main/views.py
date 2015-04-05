@@ -1,8 +1,8 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request, current_app
 from flask.ext.login import login_required, current_user
 from . import main
-from ..models import SingleChoice
-from forms import SingleChoiceForm
+from ..models import SingleChoice, BlankFill, Essay
+from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm
 from .. import db
 
 @main.route('/')
@@ -30,10 +30,14 @@ def single_choice():
         db.session.add(single_choice)
         db.session.commit()
         return redirect(url_for('main.single_choice'))
-    single_choice = SingleChoice.query.order_by(
-            SingleChoice.add_date.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    pagination = SingleChoice.query.order_by(
+            SingleChoice.timestamp.desc()).paginate(
+            page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
+            error_out=False)
+    single_choice = pagination.items
     return render_template('single_choice.html', form=form,
-            single_choice=single_choice)
+            single_choice=single_choice, pagination=pagination)
 
 @main.route('/edit_single_choice/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -49,6 +53,7 @@ def edit_single_choice(id):
         single_choice.B = form.B.data
         single_choice.C = form.C.data
         single_choice.D = form.D.data
+        single_choice.answer = form.answer.data
         db.session.add(single_choice)
         db.session.commit()
         return redirect(url_for('main.single_choice'))
@@ -60,4 +65,127 @@ def edit_single_choice(id):
     form.B.data = single_choice.B
     form.C.data = single_choice.C
     form.D.data = single_choice.D
+    form.answer.data = single_choice.answer
     return render_template('edit_single_choice.html', form=form)
+
+@main.route('/delete_single_choice/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_single_choice(id):
+    single_choice = SingleChoice.query.get_or_404(id)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(single_choice)
+        db.session.commit()
+        return redirect(url_for('main.single_choice'))
+    return render_template('delete_single_choice.html', form=form)
+
+@main.route('/blank_fill', methods=['GET', 'POST'])
+@login_required
+def blank_fill():
+    form = BlankFillForm()
+    if form.validate_on_submit():
+        blank_fill = BlankFill(question=form.question.data,
+                difficult_level=form.difficult_level.data,
+                faq=form.faq.data, score=form.score.data,
+                answer=form.answer.data)
+        db.session.add(blank_fill)
+        db.session.commit()
+        return redirect(url_for('main.blank_fill'))
+    page = request.args.get('page', 1, type=int)
+    pagination = BlankFill.query.order_by(
+            BlankFill.timestamp.desc()).paginate(
+            page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
+            error_out=False)
+    blank_fill = pagination.items
+    return render_template('blank_fill.html', form=form,
+            blank_fill=blank_fill, pagination=pagination)
+
+@main.route('/edit_blank_fill/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_blank_fill(id):
+    blank_fill = BlankFill.query.get_or_404(id)
+    form = BlankFillForm()
+    if form.validate_on_submit():
+        blank_fill.question = form.question.data
+        blank_fill.difficult_level = form.difficult_level.data
+        blank_fill.faq = form.faq.data
+        blank_fill.score = form.score.data
+        blank_fill.answer = form.answer.data
+        db.session.add(blank_fill)
+        db.session.commit()
+        return redirect(url_for('main.blank_fill'))
+    form.question.data = blank_fill.question
+    form.difficult_level.data = blank_fill.difficult_level
+    form.faq.data = blank_fill.faq
+    form.score.data = blank_fill.score
+    form.answer.data = blank_fill.answer
+    return render_template('edit_blank_fill.html', form=form)
+
+@main.route('/delete_blank_fill/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_blank_fill(id):
+    blank_fill = BlankFill.query.get_or_404(id)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(blank_fill)
+        db.session.commit()
+        return redirect(url_for('main.blank_fill'))
+    return render_template('delete_blank_fill.html', form=form)
+
+@main.route('/essay', methods=['GET', 'POST'])
+@login_required
+def essay():
+    form = EssayForm()
+    if form.validate_on_submit():
+        essay = Essay(question=form.question.data,
+                difficult_level=form.difficult_level.data,
+                faq=form.faq.data, score=form.score.data,
+                answer=form.answer.data)
+        db.session.add(essay)
+        db.session.commit()
+        return redirect(url_for('main.essay'))
+    page = request.args.get('page', 1, type=int)
+    pagination = Essay.query.order_by(
+            Essay.timestamp.desc()).paginate(
+            page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
+            error_out=False)
+    essay = pagination.items
+    return render_template('essay.html', form=form,
+            essay=essay, pagination=pagination)
+
+@main.route('/edit_essay/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_essay(id):
+    essay = Essay.query.get_or_404(id)
+    form = EssayForm()
+    if form.validate_on_submit():
+        essay.question = form.question.data
+        essay.difficult_level = form.difficult_level.data
+        essay.faq = form.faq.data
+        essay.score = form.score.data
+        essay.answer = form.answer.data
+        db.session.add(essay)
+        db.session.commit()
+        return redirect(url_for('main.essay'))
+    form.question.data = essay.question
+    form.difficult_level.data = essay.difficult_level
+    form.faq.data = essay.faq
+    form.score.data = essay.score
+    form.answer.data = essay.answer
+    return render_template('edit_essay.html', form=form)
+
+@main.route('/delete_essay/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_essay(id):
+    essay = Essay.query.get_or_404(id)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(essay)
+        db.session.commit()
+        return redirect(url_for('main.essay'))
+    return render_template('delete_essay.html', form=form)
+
+@main.route('/about')
+@login_required
+def about():
+    return render_template('about.html')

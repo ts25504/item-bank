@@ -1,25 +1,27 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Single Choice{% endblock %}
+{% import "_macros.html" as macros %}
+{% block title %}单选题{% endblock %}
 {% block page_content %}
-<h1 class="page-header">SingleChoice</h1>
+<h1 class="page-header">单选题</h1>
 <ul class="posts">
     {% for sc in single_choice %}
     <li class="post">
         <div class="post-content">
             <div class="post-date">{{ sc.add_date }}</br><span class="label label-primary">Difficult Level: {{ sc.difficult_level }}</span></div>
-            <div class="post-author">{{ sc.id }} {{ sc.question }}</div>
+            <div class="post-author">{{ sc.id }}. {{ sc.question }}</div>
             <div class="post-body">
-                {{ sc.A }}</br>
-                {{ sc.B }}</br>
-                {{ sc.C }}</br>
-                {{ sc.D }}</br>
+                A: {{ sc.A }}</br>
+                B: {{ sc.B }}</br>
+                C: {{ sc.C }}</br>
+                D: {{ sc.D }}</br>
+                Answer: {{ sc.answer}}
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_single_choice', id=sc.id) }}">
                     <span class="label label-primary">Edit</span>
                 </a>
-                <a href="">
+                <a href="{{ url_for('main.delete_single_choice', id=sc.id) }}">
                     <span class="label label-default">Delete</span>
                 </a>
             </div>
@@ -27,5 +29,15 @@
     </li>
     {% endfor %}
 </ul>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'main.single_choice') }}
+</div>
+{% endif %}
 {{ wtf.quick_form(form) }}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
 {% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}删除 － 问答题{% endblock %}
+{% block page_content %}
+<h1 class="page-header">删除 － 问答题</h1>
+<p>确定删除？</p>
+<form method="post">
+    {{ form.hidden_tag() }}
+    {{ form.submit() }}
+</form>
+{% endblock %}

@@ -7,6 +7,7 @@ class Config:
     MYSQL_HOSTNAME = os.environ.get('MYSQL_HOSTNAME')
     MYSQL_DEV_DB = os.environ.get('MYSQL_DEV_DB')
     MYSQL_PRODUCT_DB = os.environ.get('MYSQL_PRODUCT_DB')
+    QUESTIONS_PER_PAGE = 15
 
     @staticmethod
     def init_app(app):

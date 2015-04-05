@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
 from . import db, login_manager
@@ -29,9 +29,10 @@ class SingleChoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text())
     difficult_level = db.Column(db.Enum('A', 'B', 'C', 'D', 'E'), default='C')
-    add_date = db.Column(db.DateTime(), default=datetime.utcnow)
+    add_date = db.Column(db.Date(), default=date.today)
     faq = db.Column(db.Text())
     score = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
 
     answer = db.Column(db.Enum('A', 'B', 'C', 'D'))
     A = db.Column(db.String(64))
@@ -44,9 +45,10 @@ class BlankFill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text())
     difficult_level = db.Column(db.Enum('A', 'B', 'C', 'D', 'E'))
-    add_date = db.Column(db.DateTime(), default=datetime.utcnow)
+    add_date = db.Column(db.Date(), default=date.today)
     faq = db.Column(db.Text())
     score = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
 
     answer = db.Column(db.String(64))
 
@@ -55,6 +57,9 @@ class Essay(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text())
     difficult_level = db.Column(db.Enum('A', 'B', 'C', 'D', 'E'))
-    add_date = db.Column(db.DateTime(), default=datetime.utcnow)
+    add_date = db.Column(db.Date(), default=date.today)
     faq = db.Column(db.Text())
     score = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    answer = db.Column(db.Text())

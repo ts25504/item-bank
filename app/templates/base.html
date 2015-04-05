@@ -1,10 +1,12 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Knowledge Base{% endblock %}
+{% block title %}中南大学算法与数据结构试题库{% endblock %}
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dashboard.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css')}}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block navbar %}
@@ -21,9 +23,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">设置</a></li>
-            <li><a href="#">账号</a></li>
-            <li><a href="#">帮助</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">注销</a></li>
+            <li><a href="{{ url_for('main.about') }}">关于</a></li>
           </ul>
         </div>
       </div>
@@ -35,17 +36,17 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-              <li class="active"><a href="{{ url_for('main.index') }}">欢迎<span class="sr-only">(current)</span></a></li>
+              <li><a href="{{ url_for('main.index') }}">欢迎</a></li>
           </ul>
           <ul class="nav nav-sidebar">
             <li><a href="">题库管理</a></li>
             <li><a href="{{ url_for('main.single_choice') }}">单选题</a></li>
-            <li><a href="#">填空题</a></li>
-            <li><a href="#">问答题</a></li>
+            <li><a href="{{ url_for('main.blank_fill') }}">填空题</a></li>
+            <li><a href="{{ url_for('main.essay') }}">问答题</a></li>
           </ul>
           <ul class="nav nav-sidebar">
             <li><a href="">试卷管理</a></li>
-            <li><a href="">新建试卷</a></li>
+            <li><a href="">生成新试卷</a></li>
             <li><a href="">查看试卷</a></li>
           </ul>
         </div>

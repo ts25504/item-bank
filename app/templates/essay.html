@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+{% block title %}问答题{% endblock %}
+{% block page_content %}
+<h1 class="page-header">问答题</h1>
+<ul class="posts">
+    {% for es in essay %}
+    <li class="post">
+        <div class="post-content">
+            <div class="post-date">{{ es.add_date }} <span class="label label-primary">Difficult Level: {{ es.difficult_level }}</span></div>
+            <div class="post-author">{{ es.id }}. {{ es.question }}</div>
+            <div class="post-body">
+                Answer: {{ es.answer }}
+            </div>
+            <div class="post-footer">
+                <a href="{{ url_for('main.edit_essay', id=es.id) }}">
+                    <span class="label label-primary">Edit</span>
+                </a>
+                <a href="{{ url_for('main.delete_essay', id=es.id) }}">
+                    <span class="label label-default">Delete</span>
+                </a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, 'main.essay') }}
+</div>
+{% endif %}
+{{ wtf.quick_form(form) }}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

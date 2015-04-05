@@ -2,10 +2,10 @@ from flask.ext.wtf import Form
 from wtforms import StringField, TextAreaField, SubmitField, IntegerField, \
         SelectField
 from wtforms.validators import Required, Length
-from ..models import SingleChoice
+from ..models import SingleChoice, BlankFill, Essay
 
 class SingleChoiceForm(Form):
-    question = TextAreaField('Question', validators=[Required()])
+    question = TextAreaField('New Question', validators=[Required()])
     A = StringField('A', validators=[Required(), Length(1, 64)])
     B = StringField('B', validators=[Required(), Length(1, 64)])
     C = StringField('C', validators=[Required(), Length(1, 64)])
@@ -18,3 +18,26 @@ class SingleChoiceForm(Form):
     answer = SelectField('answer', choices=[('A', 'A'), ('B', 'B'),
         ('C', 'C'), ('D', 'D')], validators=[Required()])
     submit = SubmitField('Submit')
+
+class BlankFillForm(Form):
+    question = TextAreaField('New Question', validators=[Required()])
+    difficult_level = SelectField('difficult_level',
+            choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
+                ('E', 'E')])
+    faq = TextAreaField('faq')
+    score = IntegerField('score', validators=[Required()])
+    answer = StringField('answer', validators=[Required(), Length(1, 64)])
+    submit = SubmitField('Submit')
+
+class EssayForm(Form):
+    question = TextAreaField('New Question', validators=[Required()])
+    difficult_level = SelectField('difficult_level',
+            choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
+                ('E', 'E')])
+    faq = TextAreaField('faq')
+    score = IntegerField('score', validators=[Required()])
+    answer = TextAreaField('answer', validators=[Required()])
+    submit = SubmitField('Submit')
+
+class DeleteForm(Form):
+    submit = SubmitField('Yes')
