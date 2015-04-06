@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import current_app
 from flask.ext.login import UserMixin
 from markdown import markdown
 import bleach
@@ -47,13 +48,15 @@ class SingleChoice(db.Model):
     def on_changed_question(target, value, oldvalue, initiator):
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
+            tags=current_app.config['ALLOWED_TAGS'],
+            attributes=current_app.config['ALLOWED_ATTRIBUTES'], strip=True))
 
     @staticmethod
     def on_changed_faq(target, value, oldvalue, initiator):
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
+            tags=current_app.config['ALLOWED_TAGS'],
+            attributes=current_app.config['ALLOWED_ATTRIBUTES'], strip=True))
 
 db.event.listen(SingleChoice.question, 'set', SingleChoice.on_changed_question)
 db.event.listen(SingleChoice.faq, 'set', SingleChoice.on_changed_faq)
@@ -75,13 +78,15 @@ class BlankFill(db.Model):
     def on_changed_question(target, value, oldvalue, initiator):
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
+            tags=current_app.config['ALLOWED_TAGS'],
+            attributes=current_app.config['ALLOWED_ATTRIBUTES'], strip=True))
 
     @staticmethod
     def on_changed_faq(target, value, oldvalue, initiator):
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
+            tags=current_app.config['ALLOWED_TAGS'],
+            attributes=current_app.config['ALLOWED_ATTRIBUTES'], strip=True))
 
 db.event.listen(BlankFill.question, 'set', BlankFill.on_changed_question)
 db.event.listen(BlankFill.faq, 'set', BlankFill.on_changed_faq)
@@ -104,19 +109,22 @@ class Essay(db.Model):
     def on_changed_question(target, value, oldvalue, initiator):
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
+            tags=current_app.config['ALLOWED_TAGS'],
+            attributes=current_app.config['ALLOWED_ATTRIBUTES'], strip=True))
 
     @staticmethod
     def on_changed_faq(target, value, oldvalue, initiator):
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
+            tags=current_app.config['ALLOWED_TAGS'],
+            attributes=current_app.config['ALLOWED_ATTRIBUTES'], strip=True))
 
     @staticmethod
     def on_changed_answer(target, value, oldvalue, initiator):
         target.answer_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
+            tags=current_app.config['ALLOWED_TAGS'],
+            attributes=current_app.config['ALLOWED_ATTRIBUTES'], strip=True))
 
 db.event.listen(Essay.question, 'set', Essay.on_changed_question)
 db.event.listen(Essay.faq, 'set', Essay.on_changed_faq)
