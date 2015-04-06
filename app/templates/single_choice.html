@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 {% block title %}单选题{% endblock %}
 {% block page_content %}
@@ -14,11 +13,7 @@
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ sc.id }}.</p></div>
-                {% if sc.question_html %}
-                    {{ sc.question_html | safe }}
-                {% else %}
-                    {{ sc.question }}
-                {% endif %}
+                {{ sc.question | safe }}
                 <p>
                 A: {{ sc.A }}</br>
                 B: {{ sc.B }}</br>
@@ -27,11 +22,7 @@
                 </p>
                 <div class="post-bold">[参考答案]</div> <p>{{ sc.answer }}</p>
                 <div class="post-bold">[解析]</div>
-                {% if sc.faq_html %}
-                    {{ sc.faq_html | safe }}
-                {% else %}
-                    {{ sc.faq }}
-                {% endif %}
+                {{ sc.faq | safe }}
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_single_choice', id=sc.id) }}">
@@ -50,10 +41,45 @@
     {{ macros.pagination_widget(pagination, 'main.single_choice') }}
 </div>
 {% endif %}
-{{ wtf.quick_form(form) }}
+<form method="post" class="form" role="form">
+    {{ form.hidden_tag() }}
+    <div class="form-group  required"><label class="control-label" for="question">{{ form.question.label }}</label>
+    {{ form.question(class="ckeditor") }}
+    </div>
+    <div class="form-group  required"><label class="control-label" for="A">{{ form.A.label }}</label>
+    {{ form.A(class="form-control") }}
+    </div>
+    <div class="form-group  required"><label class="control-label" for="B">{{ form.B.label }}</label>
+    {{ form.B(class="form-control") }}
+    </div>
+    <div class="form-group  required"><label class="control-label" for="C">{{ form.C.label }}</label>
+    {{ form.C(class="form-control") }}
+    </div>
+    <div class="form-group  required"><label class="control-label" for="D">{{ form.D.label }}</label>
+    {{ form.D(class="form-control") }}
+    </div>
+    <div class="form-group  required"><label class="control-label" for="difficult_level">{{ form.difficult_level.label }}</label>
+    {{ form.difficult_level(class="form-control") }}
+    </div>
+    <div class="form-group "><label class="control-label" for="faq">{{ form.faq.label }}</label>
+    {{ form.faq(class="ckeditor") }}
+    </div>
+    <div class="form-group required"><label class="control-label" for="answer">{{ form.answer.label }}</label>
+    {{ form.answer(class="form-control") }}
+    </div>
+    {{ form.submit(class="btn btn-default") }}
+</form>
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
-{{ pagedown.include_pagedown() }}
+    {{ super() }}
+    <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('question', {
+                    filebrowserUploadUrl: '/ckupload/',
+                    });
+        CKEDITOR.replace('faq', {
+                    filebrowserUploadUrl: '/ckupload/',
+                    });
+    </script>
 {% endblock %}

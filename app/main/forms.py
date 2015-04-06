@@ -8,7 +8,7 @@ from wtforms.validators import Required, Length
 from ..models import SingleChoice, BlankFill, Essay
 
 class SingleChoiceForm(Form):
-    question = PageDownField(u'新试题', validators=[Required()])
+    question = TextAreaField(u'新试题', validators=[Required()])
     A = StringField('A', validators=[Required(), Length(1, 255)])
     B = StringField('B', validators=[Required(), Length(1, 255)])
     C = StringField('C', validators=[Required(), Length(1, 255)])
@@ -16,27 +16,27 @@ class SingleChoiceForm(Form):
     difficult_level = SelectField(u'难度',
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
                 ('E', 'E')], default='C')
-    faq = PageDownField(u'解析')
+    faq = TextAreaField(u'解析')
     answer = SelectField(u'答案', choices=[('A', 'A'), ('B', 'B'),
         ('C', 'C'), ('D', 'D')], validators=[Required()])
     submit = SubmitField(u'提交')
 
 class BlankFillForm(Form):
-    question = PageDownField(u'新试题', validators=[Required()])
+    question = TextAreaField(u'新试题', validators=[Required()])
     difficult_level = SelectField(u'难度',
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
                 ('E', 'E')], default='C')
-    faq = PageDownField(u'解析')
+    faq = TextAreaField(u'解析')
     answer = StringField(u'答案', validators=[Required(), Length(1, 255)])
     submit = SubmitField(u'提交')
 
 class EssayForm(Form):
-    question = PageDownField(u'新试题', validators=[Required()])
+    question = TextAreaField(u'新试题', validators=[Required()])
     difficult_level = SelectField(u'难度',
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
                 ('E', 'E')], default='C')
-    faq = PageDownField(u'解析')
-    answer = PageDownField(u'答案', validators=[Required()])
+    faq = TextAreaField(u'解析')
+    answer = TextAreaField(u'答案', validators=[Required()])
     submit = SubmitField(u'提交')
 
 class DeleteForm(Form):

@@ -61,3 +61,6 @@ target/
 
 # Virtual environment
 venv
+
+# Upload File
+app/upload/
