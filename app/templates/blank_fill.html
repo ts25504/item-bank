@@ -10,7 +10,7 @@
         <div class="post-content">
             <div class="post-date">
                 <span class="label label-primary">{{ bf.add_date }}</span>
-                <span class="label label-primary">Difficult Level: {{ bf.difficult_level }}</span>
+                <span class="label label-primary">难度: {{ bf.difficult_level }}</span>
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ bf.id }}.</p></div>
@@ -29,10 +29,10 @@
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_blank_fill', id=bf.id) }}">
-                    <span class="label label-primary">Edit</span>
+                    <span class="label label-primary">编辑</span>
                 </a>
                 <a href="{{ url_for('main.delete_blank_fill', id=bf.id) }}">
-                    <span class="label label-default">Delete</span>
+                    <span class="label label-default">删除</span>
                 </a>
             </div>
         </div>

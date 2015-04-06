@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block page_content %}
+<h1 class="page-header">{% block page_header %}{% block endblock %}</h1>
+<ul class="posts">
+    <li class="post">
+    <div class="post-content">
+        <div class="post-date">
+            <span class="label label-primary">{% block date %}{% endblock %}</span>
+            <span class="label label-primary">难度: {% block difficult_level %}{% endblock %}</span>
+        </div>
+        <div class="post-body">
+            <div class="post-bold"><p>{% block id %}{% endblock %}</p></div>
+            {% block body %}{% endblock %}
+            <div class="post-bold">[参考答案]</div>
+            {% block answer %}{% endblock %}
+            <div class="post-bold">[解析]</div>
+            {% block faq %}{% endblock %}
+        </div>
+        <div class="post-footer">
+            {% block footer %}{% endblock %}
+        </div>
+    </div>
+    </li>
+</ul>
+{% endblock %}

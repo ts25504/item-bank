@@ -8,6 +8,14 @@ class Config:
     MYSQL_DEV_DB = os.environ.get('MYSQL_DEV_DB')
     MYSQL_PRODUCT_DB = os.environ.get('MYSQL_PRODUCT_DB')
     QUESTIONS_PER_PAGE = 15
+    ALLOWED_TAGS = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                    'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                    'h1', 'h2', 'h3', 'p', 'img', 'br', 'sub', 'sup']
+    ALLOWED_ATTRIBUTES = {
+            '*' : ['class'],
+            'a' : ['href'],
+            'img' : ['src', 'alt'],
+            }
 
     @staticmethod
     def init_app(app):

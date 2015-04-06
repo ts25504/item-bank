@@ -10,7 +10,7 @@
         <div class="post-content">
             <div class="post-date">
                 <span class="label label-primary">{{ es.add_date }}</span>
-                <span class="label label-primary">Difficult Level: {{ es.difficult_level }}</span>
+                <span class="label label-primary">难度: {{ es.difficult_level }}</span>
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ es.id }}.</p></div>
@@ -34,10 +34,10 @@
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_essay', id=es.id) }}">
-                    <span class="label label-primary">Edit</span>
+                    <span class="label label-primary">编辑</span>
                 </a>
                 <a href="{{ url_for('main.delete_essay', id=es.id) }}">
-                    <span class="label label-default">Delete</span>
+                    <span class="label label-default">删除</span>
                 </a>
             </div>
         </div>

@@ -10,7 +10,7 @@
         <div class="post-content">
             <div class="post-date">
                 <span class="label label-primary">{{ sc.add_date }}</span>
-                <span class="label label-primary">Difficult Level: {{ sc.difficult_level }}</span>
+                <span class="label label-primary">难度: {{ sc.difficult_level }}</span>
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ sc.id }}.</p></div>
@@ -35,10 +35,10 @@
             </div>
             <div class="post-footer">
                 <a href="{{ url_for('main.edit_single_choice', id=sc.id) }}">
-                    <span class="label label-primary">Edit</span>
+                    <span class="label label-primary">编辑</span>
                 </a>
                 <a href="{{ url_for('main.delete_single_choice', id=sc.id) }}">
-                    <span class="label label-default">Delete</span>
+                    <span class="label label-default">删除</span>
                 </a>
             </div>
         </div>

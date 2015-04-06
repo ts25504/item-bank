@@ -45,23 +45,15 @@ class SingleChoice(db.Model):
 
     @staticmethod
     def on_changed_question(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img', 'br']
-        attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, attributes=attrs, strip=True))
+            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
 
     @staticmethod
     def on_changed_faq(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img', 'br']
-        attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, attributes=attrs, strip=True))
+            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
 
 db.event.listen(SingleChoice.question, 'set', SingleChoice.on_changed_question)
 db.event.listen(SingleChoice.faq, 'set', SingleChoice.on_changed_faq)
@@ -81,23 +73,15 @@ class BlankFill(db.Model):
 
     @staticmethod
     def on_changed_question(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img', 'br']
-        attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, attributes=attrs, strip=True))
+            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
 
     @staticmethod
     def on_changed_faq(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img', 'br']
-        attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, attributes=attrs, strip=True))
+            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
 
 db.event.listen(BlankFill.question, 'set', BlankFill.on_changed_question)
 db.event.listen(BlankFill.faq, 'set', BlankFill.on_changed_faq)
@@ -118,33 +102,21 @@ class Essay(db.Model):
 
     @staticmethod
     def on_changed_question(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img', 'br']
-        attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.question_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, attributes=attrs, strip=True))
+            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
 
     @staticmethod
     def on_changed_faq(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img', 'br']
-        attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.faq_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, attributes=attrs, strip=True))
+            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
 
     @staticmethod
     def on_changed_answer(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                        'h1', 'h2', 'h3', 'p', 'img', 'br']
-        attrs = {'*' : ['class'], 'a' : ['href', 'rel'], 'img' : ['src', 'alt'],}
         target.answer_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'),
-            tags=allowed_tags, attributes=attrs, strip=True))
+            tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, strip=True))
 
 db.event.listen(Essay.question, 'set', Essay.on_changed_question)
 db.event.listen(Essay.faq, 'set', Essay.on_changed_faq)
