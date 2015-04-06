@@ -63,4 +63,4 @@ target/
 venv
 
 # Upload File
-app/upload/
+app/static/upload/
