@@ -35,7 +35,6 @@ class SingleChoice(db.Model):
     add_date = db.Column(db.Date, default=date.today)
     faq = db.Column(db.Text)
     faq_html = db.Column(db.Text)
-    score = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     answer = db.Column(db.Enum('A', 'B', 'C', 'D'))
@@ -76,7 +75,6 @@ class BlankFill(db.Model):
     add_date = db.Column(db.Date, default=date.today)
     faq = db.Column(db.Text)
     faq_html = db.Column(db.Text)
-    score = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     answer = db.Column(db.String(255))
@@ -113,7 +111,6 @@ class Essay(db.Model):
     add_date = db.Column(db.Date, default=date.today)
     faq = db.Column(db.Text)
     faq_html = db.Column(db.Text)
-    score = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     answer = db.Column(db.Text)

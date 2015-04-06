@@ -11,7 +11,6 @@ class SingleChoiceForm(Form):
     B = StringField('B', validators=[Required(), Length(1, 255)])
     C = StringField('C', validators=[Required(), Length(1, 255)])
     D = StringField('D', validators=[Required(), Length(1, 255)])
-    score = IntegerField('score', validators=[Required()])
     difficult_level = SelectField('difficult_level',
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
                 ('E', 'E')], default='C')
@@ -26,7 +25,6 @@ class BlankFillForm(Form):
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
                 ('E', 'E')], default='C')
     faq = PageDownField('faq')
-    score = IntegerField('score', validators=[Required()])
     answer = StringField('answer', validators=[Required(), Length(1, 255)])
     submit = SubmitField('Submit')
 
@@ -36,9 +34,16 @@ class EssayForm(Form):
             choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'),
                 ('E', 'E')], default='C')
     faq = PageDownField('faq')
-    score = IntegerField('score', validators=[Required()])
     answer = PageDownField('answer', validators=[Required()])
     submit = SubmitField('Submit')
 
 class DeleteForm(Form):
     submit = SubmitField('Yes')
+
+class TestPaperConstraintForm(Form):
+    single_choice_number = IntegerField('Single Choice Number',
+            validators=[Required()])
+    blank_fill_number = IntegerField('Blank Fill Number',
+            validators=[Required()])
+    essay_number = IntegerField('Essay Number', validators=[Required()])
+    submit = SubmitField('Submit')

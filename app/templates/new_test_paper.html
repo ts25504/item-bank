@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}新试卷{% endblock %}
+{% block page_content %}
+<h1 class="page-header">新试卷</h1>
+<h3>单选题</h3>
+<ul class="posts">
+    {% for sc in single_choice %}
+    <li class="post">
+    <div class="post-content">
+        <div class="post-date">
+            <span class="label label-primary">{{ sc.add_date }}</span>
+            <span class="label label-primary">Difficult Level: {{ sc.difficult_level }}</span>
+        </div>
+        <div class="post-body">
+            <div class="post-bold"><p>{{ sc.id }}.</p></div>
+            {% if sc.question_html %}
+                {{ sc.question_html | safe }}
+            {% else %}
+                {{ sc.question }}
+            {% endif %}
+            <p>
+            A: {{ sc.A }}</br>
+            B: {{ sc.B }}</br>
+            C: {{ sc.C }}</br>
+            D: {{ sc.D }}</br>
+            </p>
+            <div class="post-bold">[参考答案]</div> <p>{{ sc.answer }}</p>
+            <div class="post-bold">[解析]</div>
+            {% if sc.faq_html %}
+                {{ sc.faq_html | safe }}
+            {% else %}
+                {{ sc.faq }}
+            {% endif %}
+        </div>
+    </div>
+    </li>
+    {% endfor %}
+</ul>
+<h3>填空题</h3>
+<ul class="posts">
+    {% for bf in blank_fill %}
+    <li class="post">
+        <div class="post-content">
+            <div class="post-date">
+                <span class="label label-primary">{{ bf.add_date }}</span>
+                <span class="label label-primary">Difficult Level: {{ bf.difficult_level }}</span>
+            </div>
+            <div class="post-body">
+                <div class="post-bold"><p>{{ bf.id }}.</p></div>
+                {% if bf.question_html %}
+                    {{ bf.question_html | safe }}
+                {% else %}
+                    {{ bf.question }}
+                {% endif %}
+                <div class="post-bold">[参考答案]</div> <p>{{ bf.answer }}</p>
+                <div class="post-bold">[解析]</div>
+                {% if bf.faq_html %}
+                    {{ bf.faq_html | safe }}
+                {% else %}
+                    {{ bf.faq }}
+                {% endif %}
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+<h3>问答题</h3>
+<ul class="posts">
+    {% for es in essay %}
+    <li class="post">
+        <div class="post-content">
+            <div class="post-date">
+                <span class="label label-primary">{{ es.add_date }}</span>
+                <span class="label label-primary">Difficult Level: {{ es.difficult_level }}</span>
+            </div>
+            <div class="post-body">
+                <div class="post-bold"><p>{{ es.id }}.</p></div>
+                {% if es.question_html %}
+                    {{ es.question_html | safe }}
+                {% else %}
+                    {{ es.question }}
+                {% endif %}
+                <div class="post-bold">[参考答案]</div>
+                {% if es.answer_html %}
+                    {{ es.answer_html | safe }}
+                {% else %}
+                    {{ es.answer }}
+                {% endif %}
+                <div class="post-bold">[解析]</div>
+                {% if es.faq_html %}
+                    {{ es.faq_html | safe }}
+                {% else %}
+                    {{ es.faq }}
+                {% endif %}
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

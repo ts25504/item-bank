@@ -2,7 +2,8 @@ from flask import render_template, redirect, url_for, request, current_app
 from flask.ext.login import login_required, current_user
 from . import main
 from ..models import SingleChoice, BlankFill, Essay
-from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm
+from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
+        TestPaperConstraintForm
 from .. import db
 
 @main.route('/')
@@ -24,7 +25,7 @@ def single_choice():
     if form.validate_on_submit():
         single_choice = SingleChoice(question=form.question.data,
                 difficult_level=form.difficult_level.data,
-                faq=form.faq.data, score=form.score.data, A=form.A.data,
+                faq=form.faq.data, A=form.A.data,
                 B=form.B.data, C=form.C.data, D=form.D.data,
                 answer=form.answer.data)
         db.session.add(single_choice)
@@ -48,7 +49,6 @@ def edit_single_choice(id):
         single_choice.question = form.question.data
         single_choice.difficult_level = form.difficult_level.data
         single_choice.faq = form.faq.data
-        single_choice.score = form.score.data
         single_choice.A = form.A.data
         single_choice.B = form.B.data
         single_choice.C = form.C.data
@@ -60,7 +60,6 @@ def edit_single_choice(id):
     form.question.data = single_choice.question
     form.difficult_level.data = single_choice.difficult_level
     form.faq.data = single_choice.faq
-    form.score.data = single_choice.score
     form.A.data = single_choice.A
     form.B.data = single_choice.B
     form.C.data = single_choice.C
@@ -86,7 +85,7 @@ def blank_fill():
     if form.validate_on_submit():
         blank_fill = BlankFill(question=form.question.data,
                 difficult_level=form.difficult_level.data,
-                faq=form.faq.data, score=form.score.data,
+                faq=form.faq.data,
                 answer=form.answer.data)
         db.session.add(blank_fill)
         db.session.commit()
@@ -109,7 +108,6 @@ def edit_blank_fill(id):
         blank_fill.question = form.question.data
         blank_fill.difficult_level = form.difficult_level.data
         blank_fill.faq = form.faq.data
-        blank_fill.score = form.score.data
         blank_fill.answer = form.answer.data
         db.session.add(blank_fill)
         db.session.commit()
@@ -117,7 +115,6 @@ def edit_blank_fill(id):
     form.question.data = blank_fill.question
     form.difficult_level.data = blank_fill.difficult_level
     form.faq.data = blank_fill.faq
-    form.score.data = blank_fill.score
     form.answer.data = blank_fill.answer
     return render_template('edit_blank_fill.html', form=form)
 
@@ -139,7 +136,7 @@ def essay():
     if form.validate_on_submit():
         essay = Essay(question=form.question.data,
                 difficult_level=form.difficult_level.data,
-                faq=form.faq.data, score=form.score.data,
+                faq=form.faq.data,
                 answer=form.answer.data)
         db.session.add(essay)
         db.session.commit()
@@ -162,7 +159,6 @@ def edit_essay(id):
         essay.question = form.question.data
         essay.difficult_level = form.difficult_level.data
         essay.faq = form.faq.data
-        essay.score = form.score.data
         essay.answer = form.answer.data
         db.session.add(essay)
         db.session.commit()
@@ -170,7 +166,6 @@ def edit_essay(id):
     form.question.data = essay.question
     form.difficult_level.data = essay.difficult_level
     form.faq.data = essay.faq
-    form.score.data = essay.score
     form.answer.data = essay.answer
     return render_template('edit_essay.html', form=form)
 
@@ -189,3 +184,23 @@ def delete_essay(id):
 @login_required
 def about():
     return render_template('about.html')
+
+@main.route('/generate_test_paper', methods=['GET', 'POST'])
+@login_required
+def generate_test_paper():
+    single_choice = []
+    blank_fill = []
+    essay = []
+    form = TestPaperConstraintForm()
+    if form.validate_on_submit():
+        single_choice_number = form.single_choice_number.data
+        blank_fill_number = form.blank_fill_number.data
+        essay_number = form.essay_number.data
+        single_choice = SingleChoice.query.limit(single_choice_number).all()
+        blank_fill = BlankFill.query.limit(blank_fill_number).all()
+        essay = Essay.query.limit(essay_number).all()
+        return render_template('new_test_paper.html',
+                single_choice=single_choice,
+                blank_fill=blank_fill,
+                essay=essay)
+    return render_template('generate_test_paper.html', form=form)
