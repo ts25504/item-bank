@@ -13,11 +13,7 @@
         </div>
         <div class="post-body">
             <div class="post-bold"><p>{{ sc.id }}.</p></div>
-            {% if sc.question_html %}
-                {{ sc.question_html | safe }}
-            {% else %}
-                {{ sc.question }}
-            {% endif %}
+            {{ sc.question | safe }}
             <p>
             A: {{ sc.A }}</br>
             B: {{ sc.B }}</br>
@@ -26,11 +22,7 @@
             </p>
             <div class="post-bold">[参考答案]</div> <p>{{ sc.answer }}</p>
             <div class="post-bold">[解析]</div>
-            {% if sc.faq_html %}
-                {{ sc.faq_html | safe }}
-            {% else %}
-                {{ sc.faq }}
-            {% endif %}
+            {{ sc.faq | safe }}
         </div>
     </div>
     </li>
@@ -47,18 +39,10 @@
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ bf.id }}.</p></div>
-                {% if bf.question_html %}
-                    {{ bf.question_html | safe }}
-                {% else %}
-                    {{ bf.question }}
-                {% endif %}
+                {{ bf.question | safe }}
                 <div class="post-bold">[参考答案]</div> <p>{{ bf.answer }}</p>
                 <div class="post-bold">[解析]</div>
-                {% if bf.faq_html %}
-                    {{ bf.faq_html | safe }}
-                {% else %}
-                    {{ bf.faq }}
-                {% endif %}
+                {{ bf.faq | safe }}
             </div>
         </div>
     </li>
@@ -75,23 +59,11 @@
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ es.id }}.</p></div>
-                {% if es.question_html %}
-                    {{ es.question_html | safe }}
-                {% else %}
-                    {{ es.question }}
-                {% endif %}
+                {{ es.question | safe }}
                 <div class="post-bold">[参考答案]</div>
-                {% if es.answer_html %}
-                    {{ es.answer_html | safe }}
-                {% else %}
-                    {{ es.answer }}
-                {% endif %}
+                {{ es.answer | safe }}
                 <div class="post-bold">[解析]</div>
-                {% if es.faq_html %}
-                    {{ es.faq_html | safe }}
-                {% else %}
-                    {{ es.faq }}
-                {% endif %}
+                {{ es.faq | safe }}
             </div>
         </div>
     </li>

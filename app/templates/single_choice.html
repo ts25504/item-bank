@@ -41,34 +41,7 @@
     {{ macros.pagination_widget(pagination, 'main.single_choice') }}
 </div>
 {% endif %}
-<form method="post" class="form" role="form">
-    {{ form.hidden_tag() }}
-    <div class="form-group  required"><label class="control-label" for="question">{{ form.question.label }}</label>
-    {{ form.question(class="ckeditor") }}
-    </div>
-    <div class="form-group  required"><label class="control-label" for="A">{{ form.A.label }}</label>
-    {{ form.A(class="form-control") }}
-    </div>
-    <div class="form-group  required"><label class="control-label" for="B">{{ form.B.label }}</label>
-    {{ form.B(class="form-control") }}
-    </div>
-    <div class="form-group  required"><label class="control-label" for="C">{{ form.C.label }}</label>
-    {{ form.C(class="form-control") }}
-    </div>
-    <div class="form-group  required"><label class="control-label" for="D">{{ form.D.label }}</label>
-    {{ form.D(class="form-control") }}
-    </div>
-    <div class="form-group  required"><label class="control-label" for="difficult_level">{{ form.difficult_level.label }}</label>
-    {{ form.difficult_level(class="form-control") }}
-    </div>
-    <div class="form-group "><label class="control-label" for="faq">{{ form.faq.label }}</label>
-    {{ form.faq(class="ckeditor") }}
-    </div>
-    <div class="form-group required"><label class="control-label" for="answer">{{ form.answer.label }}</label>
-    {{ form.answer(class="form-control") }}
-    </div>
-    {{ form.submit(class="btn btn-default") }}
-</form>
+{% include '_single_choice_form.html' %}
 {% endblock %}
 
 {% block scripts %}
