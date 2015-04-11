@@ -14,6 +14,11 @@ from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
         TestPaperConstraintForm
 from .. import db
 
+from ..genetic_algorithm.db import DB
+from ..genetic_algorithm.paper import Paper
+from ..genetic_algorithm.problem import Problem
+from ..genetic_algorithm.main import Genetic
+
 @main.route('/')
 def index_or_login():
     if current_user.is_authenticated():
@@ -202,11 +207,76 @@ def generate_test_paper():
     form = TestPaperConstraintForm()
     if form.validate_on_submit():
         single_choice_number = form.single_choice_number.data
+        single_choice_score = form.single_choice_score.data
         blank_fill_number = form.blank_fill_number.data
+        blank_fill_score = form.blank_fill_score.data
         essay_number = form.essay_number.data
-        single_choice = SingleChoice.query.limit(single_choice_number).all()
-        blank_fill = BlankFill.query.limit(blank_fill_number).all()
-        essay = Essay.query.limit(essay_number).all()
+        essay_score = form.essay_score.data
+        difficulty = form.difficulty.data
+
+        paper = Paper()
+        paper.id = 1
+        paper.difficulty = difficulty
+        paper.points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        paper.each_point_score = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        paper.each_type_count = [single_choice_number,
+                blank_fill_number, essay_number]
+        paper.each_type_score = [single_choice_score,
+                blank_fill_score, essay_score]
+        paper.total_score = single_choice_score + blank_fill_score + \
+                essay_score
+
+        single_choice = SingleChoice.query.all()
+        blank_fill = BlankFill.query.all()
+        essay = Essay.query.all()
+
+        problem_list = []
+        for sc in single_choice:
+            p = Problem()
+            p.id = sc.id
+            p.type = 1
+            p.difficulty = sc.difficult_level
+            p.points.append(sc.knowledge_points)
+            p.score = single_choice_score / single_choice_number
+            problem_list.append(p)
+
+        for bf in blank_fill:
+            p = Problem()
+            p.id = bf.id
+            p.type = 2
+            p.difficulty = bf.difficult_level
+            p.points.append(bf.knowledge_points)
+            p.score = blank_fill_score / blank_fill_number
+            problem_list.append(p)
+
+        for es in essay:
+            p = Problem()
+            p.id = es.id
+            p.type = 3
+            p.difficulty = es.difficult_level
+            p.points.append(es.knowledge_points)
+            p.score = essay_score / essay_number
+            problem_list.append(p)
+
+        db = DB()
+        db.create_from_problem_list(problem_list)
+        genetic = Genetic(paper, db)
+        u = genetic.run(0.85)
+
+        single_choice = []
+        blank_fill = []
+        essay = []
+        for p in u.problem_list:
+            if p.type == 1:
+                sc = SingleChoice.query.filter_by(id=p.id).all()
+                single_choice += sc
+            if p.type == 2:
+                bf = BlankFill.query.filter_by(id=p.id).all()
+                blank_fill += bf
+            if p.type == 3:
+                es = Essay.query.filter_by(id=p.id).all()
+                essay += es
+
         return render_template('new_test_paper.html',
                 single_choice=single_choice,
                 blank_fill=blank_fill,
