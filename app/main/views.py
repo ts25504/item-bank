@@ -9,7 +9,7 @@ from flask import render_template, redirect, url_for, request, current_app, \
         make_response
 from flask.ext.login import login_required, current_user
 from . import main
-from ..models import SingleChoice, BlankFill, Essay
+from ..models import SingleChoice, BlankFill, Essay, Points, Subject
 from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
         TestPaperConstraintForm
 from .. import db
@@ -35,12 +35,22 @@ def index():
 @login_required
 def single_choice():
     form = SingleChoiceForm()
+    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         single_choice = SingleChoice(question=form.question.data,
                 difficult_level=form.difficult_level.data,
                 faq=form.faq.data, A=form.A.data,
                 B=form.B.data, C=form.C.data, D=form.D.data,
+                knowledge_points=form.knowledge_points.data,
+                subject=form.subject.data,
                 answer=form.answer.data)
+
+        p = Points.query.filter_by(id=singlechoice.knowledge_points).first()
+        singlechoice.knowledge_points_name = p.name
+        s = Subject.query.filter_by(id=singlechoice.subject).first()
+        singlechoice.subject_name = s.name
+
         db.session.add(single_choice)
         db.session.commit()
         return redirect(url_for('main.single_choice'))
@@ -58,6 +68,8 @@ def single_choice():
 def edit_single_choice(id):
     single_choice = SingleChoice.query.get_or_404(id)
     form = SingleChoiceForm()
+    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         single_choice.question = form.question.data
         single_choice.difficult_level = form.difficult_level.data
@@ -66,10 +78,13 @@ def edit_single_choice(id):
         single_choice.B = form.B.data
         single_choice.C = form.C.data
         single_choice.D = form.D.data
+        single_choice.knowledge_points = form.knowledge_points.data
+        single_choice.subject = form.subject.data,
         single_choice.answer = form.answer.data
         db.session.add(single_choice)
         db.session.commit()
         return redirect(url_for('main.single_choice'))
+
     form.question.data = single_choice.question
     form.difficult_level.data = single_choice.difficult_level
     form.faq.data = single_choice.faq
@@ -77,6 +92,8 @@ def edit_single_choice(id):
     form.B.data = single_choice.B
     form.C.data = single_choice.C
     form.D.data = single_choice.D
+    form.knowledge_points.data = single_choice.knowledge_points
+    form.subject.data = single_choice.subject
     form.answer.data = single_choice.answer
     return render_template('edit_single_choice.html', form=form)
 
@@ -95,11 +112,21 @@ def delete_single_choice(id):
 @login_required
 def blank_fill():
     form = BlankFillForm()
+    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         blank_fill = BlankFill(question=form.question.data,
                 difficult_level=form.difficult_level.data,
                 faq=form.faq.data,
+                knowledge_points=form.knowledge_points.data,
+                subject=form.subject.data,
                 answer=form.answer.data)
+
+        p = Points.query.filter_by(id=blankfill.knowledge_points).first()
+        blankfill.knowledge_points_name = p.name
+        s = Subject.query.filter_by(id=blankfill.subject).first()
+        blankfill.subject_name = s.name
+
         db.session.add(blank_fill)
         db.session.commit()
         return redirect(url_for('main.blank_fill'))
@@ -117,17 +144,24 @@ def blank_fill():
 def edit_blank_fill(id):
     blank_fill = BlankFill.query.get_or_404(id)
     form = BlankFillForm()
+    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         blank_fill.question = form.question.data
         blank_fill.difficult_level = form.difficult_level.data
         blank_fill.faq = form.faq.data
+        blank_fill.knowledge_points = form.knowledge_points.data
+        blank_fill.subject = form.subject.data
         blank_fill.answer = form.answer.data
         db.session.add(blank_fill)
         db.session.commit()
         return redirect(url_for('main.blank_fill'))
+
     form.question.data = blank_fill.question
     form.difficult_level.data = blank_fill.difficult_level
     form.faq.data = blank_fill.faq
+    form.knowledge_points.data = blank_fill.knowledge_points
+    form.subject.data = blank_fill.subject
     form.answer.data = blank_fill.answer
     return render_template('edit_blank_fill.html', form=form)
 
@@ -146,11 +180,21 @@ def delete_blank_fill(id):
 @login_required
 def essay():
     form = EssayForm()
+    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         essay = Essay(question=form.question.data,
                 difficult_level=form.difficult_level.data,
                 faq=form.faq.data,
+                knowledge_points=form.knowledge_points.data,
+                subject=form.subject.data,
                 answer=form.answer.data)
+
+        p = Points.query.filter_by(id=essay.knowledge_points).first()
+        essay.knowledge_points_name = p.name
+        s = Subject.query.filter_by(id=essay.subject).first()
+        essay.subject_name = s.name
+
         db.session.add(essay)
         db.session.commit()
         return redirect(url_for('main.essay'))
@@ -168,17 +212,24 @@ def essay():
 def edit_essay(id):
     essay = Essay.query.get_or_404(id)
     form = EssayForm()
+    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         essay.question = form.question.data
         essay.difficult_level = form.difficult_level.data
         essay.faq = form.faq.data
+        essay.knowledge_points = form.knowledge_points.data
+        essay.subject = form.subject.data
         essay.answer = form.answer.data
         db.session.add(essay)
         db.session.commit()
         return redirect(url_for('main.essay'))
+
     form.question.data = essay.question
     form.difficult_level.data = essay.difficult_level
     form.faq.data = essay.faq
+    form.knowledge_points.data = essay.knowledge_points
+    form.subject.data = essay.subject
     form.answer.data = essay.answer
     return render_template('edit_essay.html', form=form)
 
@@ -204,8 +255,11 @@ def generate_test_paper():
     single_choice = []
     blank_fill = []
     essay = []
+    each_point_score = []
     form = TestPaperConstraintForm()
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        subject = form.subject.data
         single_choice_number = form.single_choice_number.data
         single_choice_score = form.single_choice_score.data
         blank_fill_number = form.blank_fill_number.data
@@ -213,12 +267,17 @@ def generate_test_paper():
         essay_number = form.essay_number.data
         essay_score = form.essay_score.data
         difficulty = form.difficulty.data
+        points = form.points.data
+        each_point_score = form.each_point_score.data
 
         paper = Paper()
         paper.id = 1
         paper.difficulty = difficulty
-        paper.points = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        paper.each_point_score = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        for p in points:
+            pp = Points.query.filter_by(name=p).first()
+            paper.points.append(pp.id)
+        for eps in each_point_score:
+            paper.each_point_score.append(int(eps))
         paper.each_type_count = [single_choice_number,
                 blank_fill_number, essay_number]
         paper.each_type_score = [single_choice_score,
@@ -226,9 +285,9 @@ def generate_test_paper():
         paper.total_score = single_choice_score + blank_fill_score + \
                 essay_score
 
-        single_choice = SingleChoice.query.all()
-        blank_fill = BlankFill.query.all()
-        essay = Essay.query.all()
+        single_choice = SingleChoice.query.filter_by(subject=subject).all()
+        blank_fill = BlankFill.query.filter_by(subject=subject).all()
+        essay = Essay.query.filter_by(subject=subject).all()
 
         problem_list = []
         for sc in single_choice:
@@ -261,7 +320,7 @@ def generate_test_paper():
         db = DB()
         db.create_from_problem_list(problem_list)
         genetic = Genetic(paper, db)
-        u = genetic.run(0.85)
+        u = genetic.run(0.98)
 
         single_choice = []
         blank_fill = []

@@ -1,5 +1,8 @@
 <form method="post" class="form" role="form">
     {{ form.hidden_tag() }}
+    <div class="form-group  required"><label class="control-label" for="subject">{{ form.subject.label }}</label>
+    {{ form.subject(class="form-control") }}
+    </div>
     <div class="form-group  required"><label class="control-label" for="question">{{ form.question.label }}</label>
     {{ form.question(class="ckeditor") }}
     </div>
@@ -14,6 +17,9 @@
     </div>
     <div class="form-group  required"><label class="control-label" for="D">{{ form.D.label }}</label>
     {{ form.D(class="form-control") }}
+    </div>
+    <div class="form-group  required"><label class="control-label" for="knowledge_points">{{ form.knowledge_points.label }}</label>
+    {{ form.knowledge_points(class="form-control") }}
     </div>
     <div class="form-group  required"><label class="control-label" for="difficult_level">{{ form.difficult_level.label }}</label>
     {{ form.difficult_level(class="form-control") }}

@@ -2,17 +2,20 @@
 
 from flask.ext.wtf import Form
 from flask.ext.pagedown.fields import PageDownField
+from wtforms import widgets
 from wtforms import StringField, TextAreaField, SubmitField, IntegerField, \
-        SelectField, FloatField
+        SelectField, FloatField, SelectMultipleField, Field, FieldList
 from wtforms.validators import Required, Length, NumberRange
-from ..models import SingleChoice, BlankFill, Essay
+from ..models import SingleChoice, BlankFill, Essay, Points
 
 class SingleChoiceForm(Form):
+    subject = SelectField(u'科目', coerce=int)
     question = TextAreaField(u'新试题', validators=[Required()])
     A = StringField('A', validators=[Required(), Length(1, 255)])
     B = StringField('B', validators=[Required(), Length(1, 255)])
     C = StringField('C', validators=[Required(), Length(1, 255)])
     D = StringField('D', validators=[Required(), Length(1, 255)])
+    knowledge_points = SelectField(u'知识点', coerce=int)
     difficult_level = FloatField(u'难度', validators=[Required(),
         NumberRange(min=0, max=1)])
     faq = TextAreaField(u'解析')
@@ -21,7 +24,9 @@ class SingleChoiceForm(Form):
     submit = SubmitField(u'提交')
 
 class BlankFillForm(Form):
+    subject = SelectField(u'科目', coerce=int)
     question = TextAreaField(u'新试题', validators=[Required()])
+    knowledge_points = SelectField(u'知识点', coerce=int)
     difficult_level = FloatField(u'难度', validators=[Required(),
         NumberRange(min=0, max=1)])
     faq = TextAreaField(u'解析')
@@ -29,7 +34,9 @@ class BlankFillForm(Form):
     submit = SubmitField(u'提交')
 
 class EssayForm(Form):
+    subject = SelectField(u'科目', coerce=int)
     question = TextAreaField(u'新试题', validators=[Required()])
+    knowledge_points = SelectField(u'知识点', coerce=int)
     difficult_level = FloatField(u'难度', validators=[Required(),
         NumberRange(min=0, max=1)])
     faq = TextAreaField(u'解析')
@@ -39,7 +46,23 @@ class EssayForm(Form):
 class DeleteForm(Form):
     submit = SubmitField(u'确定')
 
+class TagListField(Field):
+    widget = widgets.TextInput()
+
+    def _value(self):
+        if self.data:
+            return u', '.join(self.data)
+        else:
+            return u''
+
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = [x.strip() for x in valuelist[0].split(',')]
+        else:
+            self.data = []
+
 class TestPaperConstraintForm(Form):
+    subject = SelectField(u'科目', coerce=int)
     single_choice_number = IntegerField(u'单选题数量',
             validators=[Required()])
     single_choice_score = IntegerField(u'单选题分数',
@@ -50,5 +73,7 @@ class TestPaperConstraintForm(Form):
             validators=[Required()])
     essay_number = IntegerField(u'问答题数量', validators=[Required()])
     essay_score = IntegerField(u'问答题分数', validators=[Required()])
-    difficulty = FloatField(u'期望难度', validators=[Required()])
+    difficulty = FloatField(u'难度', validators=[Required()])
+    points = TagListField(u'知识点', validators=[Required()])
+    each_point_score = TagListField(u'各知识点分数', validators=[Required()])
     submit = SubmitField(u'提交')
