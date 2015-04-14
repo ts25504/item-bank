@@ -39,7 +39,7 @@
               <li><a href="{{ url_for('main.index') }}">欢迎</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li><a href="">题库管理</a></li>
+            <li><a href="{{ url_for('main.manage', subject_id=0) }}">题库管理</a></li>
             <li><a href="{{ url_for('main.single_choice') }}">单选题</a></li>
             <li><a href="{{ url_for('main.blank_fill') }}">填空题</a></li>
             <li><a href="{{ url_for('main.essay') }}">问答题</a></li>

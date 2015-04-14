@@ -45,7 +45,7 @@ class SingleChoice(db.Model):
     D = db.Column(db.String(255))
 
     @staticmethod
-    def generate_fake(count=400):
+    def generate_fake(count=200):
         from random import seed, random, randint, choice
         from models import Points, Subject
         import forgery_py
@@ -87,7 +87,7 @@ class BlankFill(db.Model):
     answer = db.Column(db.String(255))
 
     @staticmethod
-    def generate_fake(count=300):
+    def generate_fake(count=200):
         from random import seed, random, randint
         from models import Points, Subject
         import forgery_py
@@ -125,7 +125,7 @@ class Essay(db.Model):
     answer = db.Column(db.Text)
 
     @staticmethod
-    def generate_fake(count=300):
+    def generate_fake(count=100):
         from random import seed, random, randint
         from models import Points, Subject
         import forgery_py
@@ -151,6 +151,8 @@ class Points(db.Model):
     __tablename__ = 'points'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(127))
+    subject = db.Column(db.Integer)
+    subject_name = db.Column(db.String(127))
 
 class Subject(db.Model):
     __tablename__ = 'subject'

@@ -77,3 +77,13 @@ class TestPaperConstraintForm(Form):
     points = TagListField(u'知识点', validators=[Required()])
     each_point_score = TagListField(u'各知识点分数', validators=[Required()])
     submit = SubmitField(u'提交')
+
+class PointForm(Form):
+    name = StringField(u'知识点',
+            validators=[Required(), Length(1, 127)])
+    subject = SelectField(u'科目', coerce=int)
+    submit = SubmitField(u'提交')
+
+class SubjectForm(Form):
+    name = StringField(u'课程名', validators=[Required(), Length(1, 127)])
+    submit = SubmitField(u'提交')

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}题库管理{% endblock%}
+{% block page_content %}
+<h1 class="page-header">题库管理</h1>
+
+<h2 class="sub-header">课程</h2>
+<div class="row placeholders">
+{% for s in subject %}
+  <div class="col-xs-6 col-sm-3 placeholder">
+    <a href="{{ url_for('main.manage', subject_id=s.id) }}">
+      <h4>{{ s.name }}</h4>
+    </a>
+    <a href="{{ url_for('main.delete_subject', id=s.id)}}">
+      <span class="text-muted">删除</span>
+    </a>
+  </div>
+{% endfor %}
+</div>
+
+<h2 class="sub-header">知识点</h2>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>知识点</th>
+        <th></th>
+        <th></th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for p in points %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td></td>
+        <td></td>
+        <td>
+          <a href="{{ url_for('main.edit_point', id=p.id) }}">编辑</a>
+          <a href="{{ url_for('main.delete_point', id=p.id)}}">删除</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {{ wtf.quick_form(subject_form) }}
+  </br>
+  {{ wtf.quick_form(point_form) }}
+</div>
+
+{% endblock%}

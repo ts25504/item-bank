@@ -11,7 +11,7 @@ from flask.ext.login import login_required, current_user
 from . import main
 from ..models import SingleChoice, BlankFill, Essay, Points, Subject
 from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
-        TestPaperConstraintForm
+        TestPaperConstraintForm, PointForm, SubjectForm
 from .. import db
 
 from ..genetic_algorithm.db import DB
@@ -47,9 +47,9 @@ def single_choice():
                 answer=form.answer.data)
 
         p = Points.query.filter_by(id=singlechoice.knowledge_points).first()
-        singlechoice.knowledge_points_name = p.name
+        single_choice.knowledge_points_name = p.name
         s = Subject.query.filter_by(id=singlechoice.subject).first()
-        singlechoice.subject_name = s.name
+        single_choice.subject_name = s.name
 
         db.session.add(single_choice)
         db.session.commit()
@@ -81,6 +81,11 @@ def edit_single_choice(id):
         single_choice.knowledge_points = form.knowledge_points.data
         single_choice.subject = form.subject.data,
         single_choice.answer = form.answer.data
+        p = Points.query.filter_by(id=single_choice.knowledge_points).first()
+        single_choice.knowledge_points_name = p.name
+        s = Subject.query.filter_by(id=single_choice.subject).first()
+        single_choice.subject_name = s.name
+
         db.session.add(single_choice)
         db.session.commit()
         return redirect(url_for('main.single_choice'))
@@ -122,10 +127,10 @@ def blank_fill():
                 subject=form.subject.data,
                 answer=form.answer.data)
 
-        p = Points.query.filter_by(id=blankfill.knowledge_points).first()
-        blankfill.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=blankfill.subject).first()
-        blankfill.subject_name = s.name
+        p = Points.query.filter_by(id=blank_fill.knowledge_points).first()
+        blank_fill.knowledge_points_name = p.name
+        s = Subject.query.filter_by(id=blank_fill.subject).first()
+        blank_fill.subject_name = s.name
 
         db.session.add(blank_fill)
         db.session.commit()
@@ -153,6 +158,12 @@ def edit_blank_fill(id):
         blank_fill.knowledge_points = form.knowledge_points.data
         blank_fill.subject = form.subject.data
         blank_fill.answer = form.answer.data
+
+        p = Points.query.filter_by(id=blank_fill.knowledge_points).first()
+        blank_fill.knowledge_points_name = p.name
+        s = Subject.query.filter_by(id=blank_fill.subject).first()
+        blank_fill.subject_name = s.name
+
         db.session.add(blank_fill)
         db.session.commit()
         return redirect(url_for('main.blank_fill'))
@@ -221,6 +232,12 @@ def edit_essay(id):
         essay.knowledge_points = form.knowledge_points.data
         essay.subject = form.subject.data
         essay.answer = form.answer.data
+
+        p = Points.query.filter_by(id=essay.knowledge_points).first()
+        essay.knowledge_points_name = p.name
+        s = Subject.query.filter_by(id=essay.subject).first()
+        essay.subject_name = s.name
+
         db.session.add(essay)
         db.session.commit()
         return redirect(url_for('main.essay'))
@@ -248,6 +265,73 @@ def delete_essay(id):
 @login_required
 def about():
     return render_template('about.html')
+
+@main.route('/manage/<int:subject_id>', methods=['GET', 'POST'])
+@login_required
+def manage(subject_id):
+    subject = Subject.query.all()
+    if subject_id == 0:
+        points = Points.query.all()
+    else:
+        points = Points.query.filter_by(subject=subject_id)
+
+    point_form = PointForm()
+    subject_form = SubjectForm()
+    point_form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
+    if point_form.validate_on_submit():
+        point = Points(name=point_form.name.data,
+                subject=point_form.subject.data)
+        db.session.add(point)
+        db.session.commit()
+        return redirect(url_for('main.manage', subject_id=point.subject))
+
+    if subject_form.validate_on_submit():
+        subject = Subject(name=subject_form.name.data)
+        db.session.add(subject)
+        db.session.commit()
+        return redirect(url_for('main.manage', subject_id=0))
+
+    return render_template('manage.html', points=points, subject=subject,
+            point_form=point_form, subject_form=subject_form)
+
+@main.route('/delete_subject/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_subject(id):
+    subject = Points.query.get_or_404(id)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(subject)
+        db.session.commit()
+        return redirect(url_for('main.manage', subject_id=0))
+    return render_template('delete_subject.html', form=form)
+
+@main.route('/edit_point/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_point(id):
+    point = Points.query.get_or_404(id)
+    form = PointForm()
+    form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
+    if form.validate_on_submit():
+        point.name = form.name.data
+        point.subject = form.subject.data
+        db.session.add(point)
+        db.commit()
+        return redirect(url_for('main.manage', subject_id=point.subject))
+
+    form.name.data = point.name
+    form.subject.data = point.subject
+    return render_template('edit_point.html', form=form)
+
+@main.route('/delete_point/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_point(id):
+    point = Points.query.get_or_404(id)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(point)
+        db.session.commit()
+        return redirect(url_for('main.manage', subject_id=point.subject))
+    return render_template('delete_point.html', form=form)
 
 @main.route('/generate_test_paper', methods=['GET', 'POST'])
 @login_required
@@ -347,6 +431,7 @@ def gen_rnd_filename():
     return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
 @main.route('/ckupload/', methods=['POST', 'OPTIONS'])
+@login_required
 def ckupload():
     """CKEditor file upload"""
     error = ''
