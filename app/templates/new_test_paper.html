@@ -25,6 +25,11 @@
             <div class="post-bold">[解析]</div>
             {{ sc.faq | safe }}
         </div>
+        <div class="post-footer">
+            <a href="#">
+                <span class="label label-primary">编辑</span>
+            </a>
+        </div>
     </div>
     </li>
     {% endfor %}
@@ -45,6 +50,11 @@
                 <div class="post-bold">[参考答案]</div> <p>{{ bf.answer }}</p>
                 <div class="post-bold">[解析]</div>
                 {{ bf.faq | safe }}
+            </div>
+            <div class="post-footer">
+                <a href="">
+                    <span class="label label-primary">编辑</span>
+                </a>
             </div>
         </div>
     </li>
@@ -67,6 +77,11 @@
                 {{ es.answer | safe }}
                 <div class="post-bold">[解析]</div>
                 {{ es.faq | safe }}
+            </div>
+            <div class="post-footer">
+                <a href="">
+                    <span class="label label-primary">编辑</span>
+                </a>
             </div>
         </div>
     </li>

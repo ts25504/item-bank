@@ -35,7 +35,8 @@ def index():
 @login_required
 def single_choice():
     form = SingleChoiceForm()
-    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.knowledge_points.choices = \
+            [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         single_choice = SingleChoice(question=form.question.data,
@@ -271,9 +272,11 @@ def about():
 def manage(subject_id):
     subject = Subject.query.all()
     if subject_id == 0:
-        points = Points.query.all()
+        Points_query = Points.query
     else:
-        points = Points.query.filter_by(subject=subject_id)
+        Points_query = Points.query.filter_by(subject=subject_id)
+
+    points = Points_query.all()
 
     point_form = PointForm()
     subject_form = SubjectForm()
