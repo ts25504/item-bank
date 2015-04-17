@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block title %}新试卷{% endblock %}
 {% block page_content %}
+
 <h1 class="page-header">新试卷</h1>
 <h3>单选题</h3>
-<ul class="posts">
+<ul class="posts sortable">
     {% for sc in single_choice %}
     <li class="post">
     <div class="post-content">
@@ -25,17 +26,13 @@
             <div class="post-bold">[解析]</div>
             {{ sc.faq | safe }}
         </div>
-        <div class="post-footer">
-            <a href="#">
-                <span class="label label-primary">编辑</span>
-            </a>
-        </div>
     </div>
     </li>
     {% endfor %}
 </ul>
+
 <h3>填空题</h3>
-<ul class="posts">
+<ul class="posts sortable">
     {% for bf in blank_fill %}
     <li class="post">
         <div class="post-content">
@@ -51,17 +48,12 @@
                 <div class="post-bold">[解析]</div>
                 {{ bf.faq | safe }}
             </div>
-            <div class="post-footer">
-                <a href="">
-                    <span class="label label-primary">编辑</span>
-                </a>
-            </div>
         </div>
     </li>
     {% endfor %}
 </ul>
 <h3>问答题</h3>
-<ul class="posts">
+<ul class="posts sortable">
     {% for es in essay %}
     <li class="post">
         <div class="post-content">
@@ -78,13 +70,26 @@
                 <div class="post-bold">[解析]</div>
                 {{ es.faq | safe }}
             </div>
-            <div class="post-footer">
-                <a href="">
-                    <span class="label label-primary">编辑</span>
-                </a>
-            </div>
         </div>
     </li>
     {% endfor %}
 </ul>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui-1.11.4.custom/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript">
+      $(function() {
+        $( ".sortable" ).sortable({
+          revert: true
+        });
+        $( ".draggable" ).draggable({
+          connectToSortable: ".sortable",
+          helper: "clone",
+          revert: "invalid"
+        });
+        $( "ul, li" ).disableSelection();
+      });
+    </script>
 {% endblock %}
