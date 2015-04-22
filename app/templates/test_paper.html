@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}新试卷{% endblock %}
+{% block title %}{{ name }}{% endblock %}
 {% block page_content %}
 
 <h1 class="page-header">{{ name }}</h1>
@@ -74,24 +74,4 @@
     </li>
     {% endfor %}
 </ul>
-<button class="btn btn-default" onclick="window.location='{{ url_for('main.new_test_paper', name=name, subject=subject, difficulty=difficulty, sc=sc_ids, bf=bf_ids, es=es_ids) }}'">保存试卷</button>
-<button class="btn btn-default" onclick="location.reload();">重新生成试卷</button>
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui-1.11.4.custom/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript">
-      $(function() {
-        $( ".sortable" ).sortable({
-          revert: true
-        });
-        $( ".draggable" ).draggable({
-          connectToSortable: ".sortable",
-          helper: "clone",
-          revert: "invalid"
-        });
-        $( "ul, li" ).disableSelection();
-      });
-    </script>
 {% endblock %}

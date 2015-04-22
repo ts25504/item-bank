@@ -1,5 +1,6 @@
 # *- coding: utf-8 -*
 
+import re
 from flask.ext.wtf import Form
 from flask.ext.pagedown.fields import PageDownField
 from wtforms import widgets
@@ -57,11 +58,12 @@ class TagListField(Field):
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = [x.strip() for x in valuelist[0].split(',')]
+            self.data = [x.strip() for x in re.split(u'[,，]', valuelist[0])]
         else:
             self.data = []
 
 class TestPaperConstraintForm(Form):
+    name = StringField(u'试卷名称')
     subject = SelectField(u'科目', coerce=int)
     single_choice_number = IntegerField(u'单选题数量',
             validators=[Required()])

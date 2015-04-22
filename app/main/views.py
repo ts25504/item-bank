@@ -9,7 +9,7 @@ from flask import render_template, redirect, url_for, request, current_app, \
         make_response
 from flask.ext.login import login_required, current_user
 from . import main
-from ..models import SingleChoice, BlankFill, Essay, Points, Subject
+from ..models import SingleChoice, BlankFill, Essay, Points, Subject, TestPaper
 from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
         TestPaperConstraintForm, PointForm, SubjectForm
 from .. import db
@@ -336,16 +336,91 @@ def delete_point(id):
         return redirect(url_for('main.manage', subject_id=point.subject))
     return render_template('delete_point.html', form=form)
 
+def handle_str(problems):
+    problems = problems[1:]
+    problems = problems[:-1]
+    ids = problems.split(', ')
+    for i in range(len(ids)):
+        ids[i] = long(ids[i])
+    return ids
+
+@main.route('/test_papers')
+@login_required
+def test_papers():
+    page = request.args.get('page', 1, type=int)
+    pagination = TestPaper.query.order_by(
+            TestPaper.timestamp.desc()).paginate(
+            page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
+            error_out=False)
+    test_papers = pagination.items
+    return render_template('test_papers.html',
+            test_papers=test_papers, pagination=pagination)
+
+@main.route('/test_paper/<int:id>')
+@login_required
+def test_paper(id):
+    test_paper = TestPaper.query.get_or_404(id)
+    sc = handle_str(test_paper.single_choice)
+    bf = handle_str(test_paper.blank_fill)
+    es = handle_str(test_paper.essay)
+    name = test_paper.name
+    single_choice = []
+    blank_fill = []
+    essay = []
+    for sc_id in sc:
+        item = SingleChoice.query.filter_by(id=sc_id).first()
+        single_choice.append(item)
+    for bf_id in bf:
+        item = BlankFill.query.filter_by(id=bf_id).first()
+        blank_fill.append(item)
+    for es_id in es:
+        item = Essay.query.filter_by(id=es_id).first()
+        essay.append(item)
+    return render_template('test_paper.html',
+            name = name,
+            single_choice=single_choice,
+            blank_fill=blank_fill,
+            essay=essay)
+
+@main.route('/delete_test_paper/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_test_paper(id):
+    test_paper = TestPaper.query.get_or_404(id)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(test_paper)
+        db.session.commit()
+        return redirect(url_for('main.test_papers'))
+    return render_template('delete_subject.html', form=form)
+
+@main.route('/new_test_paper/<name>.<subject>.<float:difficulty>.<sc>.<bf>.<es>',
+        methods=['POST', 'GET'])
+@login_required
+def new_test_paper(name, subject, difficulty, sc, bf, es):
+    sub = Subject.query.filter_by(id=subject).first()
+    subject_name = sub.name
+    test_paper = TestPaper(name=name, subject=subject,
+            subject_name=subject_name,
+            single_choice=sc, blank_fill=bf, essay=es,
+            difficult_level=difficulty)
+    db.session.add(test_paper)
+    db.session.commit()
+    return render_template('index.html')
+
 @main.route('/generate_test_paper', methods=['GET', 'POST'])
 @login_required
 def generate_test_paper():
     single_choice = []
     blank_fill = []
     essay = []
+    sc_ids = []
+    bf_ids = []
+    es_ids = []
     each_point_score = []
     form = TestPaperConstraintForm()
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        name = form.name.data
         subject = form.subject.data
         single_choice_number = form.single_choice_number.data
         single_choice_score = form.single_choice_score.data
@@ -416,17 +491,29 @@ def generate_test_paper():
             if p.type == 1:
                 sc = SingleChoice.query.filter_by(id=p.id).all()
                 single_choice += sc
+                for item in sc:
+                    sc_ids.append(item.id)
             if p.type == 2:
                 bf = BlankFill.query.filter_by(id=p.id).all()
                 blank_fill += bf
+                for item in bf:
+                    bf_ids.append(item.id)
             if p.type == 3:
                 es = Essay.query.filter_by(id=p.id).all()
                 essay += es
+                for item in es:
+                    es_ids.append(item.id)
 
         return render_template('new_test_paper.html',
+                name=name,
                 single_choice=single_choice,
                 blank_fill=blank_fill,
-                essay=essay)
+                essay=essay,
+                sc_ids=sc_ids,
+                bf_ids=bf_ids,
+                es_ids=es_ids,
+                subject=subject,
+                difficulty=difficulty)
     return render_template('generate_test_paper.html', form=form)
 
 def gen_rnd_filename():
