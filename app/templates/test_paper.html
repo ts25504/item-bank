@@ -2,7 +2,12 @@
 {% block title %}{{ name }}{% endblock %}
 {% block page_content %}
 
-<h1 class="page-header">{{ name }}</h1>
+<div class="page-header">
+    <h1>{{ name }}</h1>
+    <a href="{{ url_for('main.edit_test_paper_name', id=tp_id) }}">
+        <span class="label label-primary">改名</span>
+    </a>
+</div>
 <h3>单选题</h3>
 <ul class="posts sortable">
     {% for sc in single_choice %}
@@ -26,6 +31,11 @@
             <div class="post-bold">[解析]</div>
             {{ sc.faq | safe }}
         </div>
+        <div class="post-footer">
+            <a href="{{ url_for('main.edit_test_paper_sc', tp_id=tp_id, id=sc.id) }}">
+                <span class="label label-primary">替换</span>
+            </a>
+        </div>
     </div>
     </li>
     {% endfor %}
@@ -48,6 +58,11 @@
                 <div class="post-bold">[解析]</div>
                 {{ bf.faq | safe }}
             </div>
+            <div class="post-footer">
+                <a href="{{ url_for('main.edit_test_paper_bf', tp_id=tp_id, id=bf.id) }}">
+                    <span class="label label-primary">替换</span>
+                </a>
+            </div>
         </div>
     </li>
     {% endfor %}
@@ -69,6 +84,11 @@
                 {{ es.answer | safe }}
                 <div class="post-bold">[解析]</div>
                 {{ es.faq | safe }}
+            </div>
+            <div class="post-footer">
+                <a href="{{ url_for('main.edit_test_paper_es', tp_id=tp_id, id=es.id) }}">
+                    <span class="label label-primary">替换</span>
+                </a>
             </div>
         </div>
     </li>

@@ -170,4 +170,3 @@ class TestPaper(db.Model):
     essay = db.Column(db.String(255))
     add_date = db.Column(db.Date, default=date.today)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    difficult_level = db.Column(db.Float)

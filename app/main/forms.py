@@ -5,7 +5,7 @@ from flask.ext.wtf import Form
 from flask.ext.pagedown.fields import PageDownField
 from wtforms import widgets
 from wtforms import StringField, TextAreaField, SubmitField, IntegerField, \
-        SelectField, FloatField, SelectMultipleField, Field, FieldList
+        SelectField, FloatField, Field
 from wtforms.validators import Required, Length, NumberRange
 from ..models import SingleChoice, BlankFill, Essay, Points
 
@@ -88,4 +88,12 @@ class PointForm(Form):
 
 class SubjectForm(Form):
     name = StringField(u'课程名', validators=[Required(), Length(1, 127)])
+    submit = SubmitField(u'提交')
+
+class TestPaperReplaceForm(Form):
+    new_id = IntegerField(u'题号', validators=[Required()])
+    submit = SubmitField(u'提交')
+
+class TestPaperNameForm(Form):
+    name = StringField(u'新名称', validators=[Required(), Length(1, 255)])
     submit = SubmitField(u'提交')

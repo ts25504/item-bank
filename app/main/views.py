@@ -11,7 +11,8 @@ from flask.ext.login import login_required, current_user
 from . import main
 from ..models import SingleChoice, BlankFill, Essay, Points, Subject, TestPaper
 from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
-        TestPaperConstraintForm, PointForm, SubjectForm
+        TestPaperConstraintForm, PointForm, SubjectForm, TestPaperReplaceForm, \
+        TestPaperNameForm
 from .. import db
 
 from ..genetic_algorithm.db import DB
@@ -377,10 +378,83 @@ def test_paper(id):
         item = Essay.query.filter_by(id=es_id).first()
         essay.append(item)
     return render_template('test_paper.html',
+            tp_id = test_paper.id,
             name = name,
             single_choice=single_choice,
             blank_fill=blank_fill,
             essay=essay)
+
+@main.route('/edit_test_paper_name/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_test_paper_name(id):
+    form = TestPaperNameForm()
+    if form.validate_on_submit():
+        test_paper = TestPaper.query.filter_by(id=id).first()
+        test_paper.name = form.name.data
+        db.session.add(test_paper)
+        db.session.commit()
+        return redirect(url_for('main.test_paper', id=id))
+    return render_template('edit_test_paper.html', form=form)
+
+@main.route('/edit_test_paper_sc/<int:tp_id>.<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_test_paper_sc(tp_id, id):
+    form = TestPaperReplaceForm()
+    if form.validate_on_submit():
+        new_id = form.new_id.data
+        test_paper = TestPaper.query.filter_by(id=tp_id).first()
+        p = handle_str(test_paper.single_choice)
+        for i in range(len(p)):
+            if p[i] == id:
+                p[i] = new_id
+        p_str = u'['
+        p_str += u', '.join(unicode(e) for e in p)
+        p_str += u']'
+        test_paper.single_choice = p_str
+        db.session.add(test_paper)
+        db.session.commit()
+        return redirect(url_for('main.test_paper', id=tp_id))
+    return render_template('edit_test_paper.html', form=form)
+
+@main.route('/edit_test_paper_bf/<int:tp_id>.<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_test_paper_bf(tp_id, id):
+    form = TestPaperReplaceForm()
+    if form.validate_on_submit():
+        new_id = form.new_id.data
+        test_paper = TestPaper.query.filter_by(id=tp_id).first()
+        p = handle_str(test_paper.blank_fill)
+        for i in range(len(p)):
+            if p[i] == id:
+                p[i] = new_id
+        p_str = u'['
+        p_str += u', '.join(unicode(e) for e in p)
+        p_str += u']'
+        test_paper.blank_fill = p_str
+        db.session.add(test_paper)
+        db.session.commit()
+        return redirect(url_for('main.test_paper', id=tp_id))
+    return render_template('edit_test_paper.html', form=form)
+
+@main.route('/edit_test_paper_es/<int:tp_id>.<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_test_paper_es(tp_id, id):
+    form = TestPaperReplaceForm()
+    if form.validate_on_submit():
+        new_id = form.new_id.data
+        test_paper = TestPaper.query.filter_by(id=tp_id).first()
+        p = handle_str(test_paper.essay)
+        for i in range(len(p)):
+            if p[i] == id:
+                p[i] = new_id
+        p_str = u'['
+        p_str += u', '.join(unicode(e) for e in p)
+        p_str += u']'
+        test_paper.essay = p_str
+        db.session.add(test_paper)
+        db.session.commit()
+        return redirect(url_for('main.test_paper', id=tp_id))
+    return render_template('edit_test_paper.html', form=form)
 
 @main.route('/delete_test_paper/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -391,7 +465,7 @@ def delete_test_paper(id):
         db.session.delete(test_paper)
         db.session.commit()
         return redirect(url_for('main.test_papers'))
-    return render_template('delete_subject.html', form=form)
+    return render_template('delete_test_paper.html', form=form)
 
 @main.route('/new_test_paper/<name>.<subject>.<float:difficulty>.<sc>.<bf>.<es>',
         methods=['POST', 'GET'])

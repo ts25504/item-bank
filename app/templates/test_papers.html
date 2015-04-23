@@ -10,16 +10,12 @@
             <div class="post-date">
                 <span class="label label-primary">{{ tp.add_date }}</span>
                 <span class="label label-primary">科目：{{ tp.subject_name }}</span>
-                <span class="label label-primary">难度：{{ tp.difficult_level }}</span>
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ tp.id }}.</p></div>
                 <p><a href="{{ url_for('main.test_paper', id=tp.id) }}">{{ tp.name }}</a></p>
             </div>
             <div class="post-footer">
-                <a href="">
-                    <span class="label label-primary">编辑</span>
-                </a>
                 <a href="{{ url_for('main.delete_test_paper', id=tp.id) }}">
                     <span class="label label-default">删除</span>
                 </a>
