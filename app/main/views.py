@@ -48,9 +48,9 @@ def single_choice():
                 subject=form.subject.data,
                 answer=form.answer.data)
 
-        p = Points.query.filter_by(id=singlechoice.knowledge_points).first()
+        p = Points.query.filter_by(id=single_choice.knowledge_points).first()
         single_choice.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=singlechoice.subject).first()
+        s = Subject.query.filter_by(id=single_choice.subject).first()
         single_choice.subject_name = s.name
 
         db.session.add(single_choice)
@@ -475,8 +475,7 @@ def new_test_paper(name, subject, difficulty, sc, bf, es):
     subject_name = sub.name
     test_paper = TestPaper(name=name, subject=subject,
             subject_name=subject_name,
-            single_choice=sc, blank_fill=bf, essay=es,
-            difficult_level=difficulty)
+            single_choice=sc, blank_fill=bf, essay=es)
     db.session.add(test_paper)
     db.session.commit()
     return render_template('index.html')
