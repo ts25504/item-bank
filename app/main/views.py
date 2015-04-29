@@ -301,7 +301,7 @@ def manage(subject_id):
 @main.route('/delete_subject/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_subject(id):
-    subject = Points.query.get_or_404(id)
+    subject = Subject.query.get_or_404(id)
     form = DeleteForm()
     if form.validate_on_submit():
         db.session.delete(subject)
