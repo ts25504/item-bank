@@ -334,8 +334,32 @@ def edit_point(id):
     if form.validate_on_submit():
         point.name = form.name.data
         point.subject = form.subject.data
+        sc = SingleChoice.query.filter_by(knowledge_points=point.id).all()
+        for i in range(len(sc)):
+            if sc[i].subject == point.subject:
+                sc[i].knowledge_points_name = point.name
+            else:
+                sc[i].knowledge_points = 0
+                sc[i].knowledge_points_name = ""
+            db.session.add(sc[i])
+        bf = BlankFill.query.filter_by(knowledge_points=point.id).all()
+        for i in range(len(bf)):
+            if bf[i].subject == point.subject:
+                bf[i].knowledge_points_name = point.name
+            else:
+                bf[i].knowledge_points = 0
+                bf[i].knowledge_points_name = ""
+            db.session.add(bf[i])
+        es = Essay.query.filter_by(knowledge_points=point.id).all()
+        for i in range(len(es)):
+            if es[i].subject == point.subject:
+                es[i].knowledge_points_name = point.name
+            else:
+                es[i].knowledge_points = 0
+                es[i].knowledge_points_name = ""
+            db.session.add(es[i])
         db.session.add(point)
-        db.commit()
+        db.session.commit()
         return redirect(url_for('main.manage', subject_id=point.subject))
 
     form.name.data = point.name
@@ -348,6 +372,21 @@ def delete_point(id):
     point = Points.query.get_or_404(id)
     form = DeleteForm()
     if form.validate_on_submit():
+        sc = SingleChoice.query.filter_by(knowledge_points=point.id).all()
+        for i in range(len(sc)):
+            sc[i].knowledge_points = 0
+            sc[i].knowledge_points_name = ""
+            db.session.add(sc[i])
+        bf = BlankFill.query.filter_by(knowledge_points=point.id).all()
+        for i in range(len(bf)):
+            bf[i].knowledge_points = 0
+            bf[i].knowledge_points_name = ""
+            db.session.add(bf[i])
+        es = Essay.query.filter_by(knowledge_points=point.id).all()
+        for i in range(len(es)):
+            es[i].knowledge_points = 0
+            es[i].knowledge_points_name = ""
+            db.session.add(es[i])
         db.session.delete(point)
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=point.subject))
