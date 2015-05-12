@@ -40,6 +40,14 @@ def single_choice():
             [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        if form.A.data[:3] == "<p>":
+            form.A.data = form.A.data[3:-6]
+        if form.B.data[:3] == "<p>":
+            form.B.data = form.B.data[3:-6]
+        if form.C.data[:3] == "<p>":
+            form.C.data = form.C.data[3:-6]
+        if form.D.data[:3] == "<p>":
+            form.D.data = form.D.data[3:-6]
         single_choice = SingleChoice(question=form.question.data,
                 difficult_level=form.difficult_level.data,
                 faq=form.faq.data, A=form.A.data,
@@ -73,6 +81,14 @@ def edit_single_choice(id):
     form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        if form.A.data[:3] == "<p>":
+            form.A.data = form.A.data[3:-6]
+        if form.B.data[:3] == "<p>":
+            form.B.data = form.B.data[3:-6]
+        if form.C.data[:3] == "<p>":
+            form.C.data = form.C.data[3:-6]
+        if form.D.data[:3] == "<p>":
+            form.D.data = form.D.data[3:-6]
         single_choice.question = form.question.data
         single_choice.difficult_level = form.difficult_level.data
         single_choice.faq = form.faq.data

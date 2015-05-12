@@ -39,10 +39,10 @@ class SingleChoice(db.Model):
     subject_name = db.Column(db.String(127))
 
     answer = db.Column(db.Enum('A', 'B', 'C', 'D'))
-    A = db.Column(db.String(255))
-    B = db.Column(db.String(255))
-    C = db.Column(db.String(255))
-    D = db.Column(db.String(255))
+    A = db.Column(db.Text)
+    B = db.Column(db.Text)
+    C = db.Column(db.Text)
+    D = db.Column(db.Text)
 
     @staticmethod
     def generate_fake(count=200):

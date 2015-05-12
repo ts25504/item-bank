@@ -12,10 +12,10 @@ from ..models import SingleChoice, BlankFill, Essay, Points
 class SingleChoiceForm(Form):
     subject = SelectField(u'科目', coerce=int)
     question = TextAreaField(u'新试题', validators=[Required()])
-    A = StringField('A', validators=[Required(), Length(1, 255)])
-    B = StringField('B', validators=[Required(), Length(1, 255)])
-    C = StringField('C', validators=[Required(), Length(1, 255)])
-    D = StringField('D', validators=[Required(), Length(1, 255)])
+    A = TextAreaField('A', validators=[Required(), Length(1, 255)])
+    B = TextAreaField('B', validators=[Required(), Length(1, 255)])
+    C = TextAreaField('C', validators=[Required(), Length(1, 255)])
+    D = TextAreaField('D', validators=[Required(), Length(1, 255)])
     knowledge_points = SelectField(u'知识点', coerce=int)
     difficult_level = FloatField(u'难度', validators=[Required(),
         NumberRange(min=0, max=1)])
