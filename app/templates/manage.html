@@ -25,7 +25,7 @@
       <tr>
         <th>#</th>
         <th>知识点</th>
-        <th></th>
+        <th>课程</th>
         <th></th>
         <th>操作</th>
       </tr>
@@ -35,7 +35,7 @@
       <tr>
         <td>{{ p.id }}</td>
         <td>{{ p.name }}</td>
-        <td></td>
+        <td>{{ p.subject_name}}</td>
         <td></td>
         <td>
           <a href="{{ url_for('main.edit_point', id=p.id) }}">编辑</a>

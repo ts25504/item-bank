@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import re
 import json
@@ -6,7 +8,7 @@ import urllib
 import datetime
 
 from flask import render_template, redirect, url_for, request, current_app, \
-        make_response
+        make_response, flash
 from flask.ext.login import login_required, current_user
 from . import main
 from ..models import SingleChoice, BlankFill, Essay, Points, Subject, TestPaper
@@ -40,6 +42,10 @@ def single_choice():
             [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        p = Points.query.filter_by(id=form.knowledge_points.data).first()
+        if p.subject != form.subject.data:
+            flash(u'知识点与课程不符')
+            return redirect(url_for('main.single_choice'))
         if form.A.data[:3] == "<p>":
             form.A.data = form.A.data[3:-6]
         if form.B.data[:3] == "<p>":
@@ -81,6 +87,10 @@ def edit_single_choice(id):
     form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        p = Points.query.filter_by(id=form.knowledge_points.data).first()
+        if p.subject != form.subject.data:
+            flash(u'知识点与课程不符')
+            return redirect(url_for('main.single_choice'))
         if form.A.data[:3] == "<p>":
             form.A.data = form.A.data[3:-6]
         if form.B.data[:3] == "<p>":
@@ -138,6 +148,10 @@ def blank_fill():
     form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        p = Points.query.filter_by(id=form.knowledge_points.data).first()
+        if p.subject != form.subject.data:
+            flash(u'知识点与课程不符')
+            return redirect(url_for('main.blank_fill'))
         blank_fill = BlankFill(question=form.question.data,
                 difficult_level=form.difficult_level.data,
                 faq=form.faq.data,
@@ -170,6 +184,10 @@ def edit_blank_fill(id):
     form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        p = Points.query.filter_by(id=form.knowledge_points.data).first()
+        if p.subject != form.subject.data:
+            flash(u'知识点与课程不符')
+            return redirect(url_for('main.blank_fill'))
         blank_fill.question = form.question.data
         blank_fill.difficult_level = form.difficult_level.data
         blank_fill.faq = form.faq.data
@@ -212,6 +230,10 @@ def essay():
     form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        p = Points.query.filter_by(id=form.knowledge_points.data).first()
+        if p.subject != form.subject.data:
+            flash(u'知识点与课程不符')
+            return redirect(url_for('main.essay'))
         essay = Essay(question=form.question.data,
                 difficult_level=form.difficult_level.data,
                 faq=form.faq.data,
@@ -244,6 +266,10 @@ def edit_essay(id):
     form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
+        p = Points.query.filter_by(id=form.knowledge_points.data).first()
+        if p.subject != form.subject.data:
+            flash(u'知识点与课程不符')
+            return redirect(url_for('main.essay'))
         essay.question = form.question.data
         essay.difficult_level = form.difficult_level.data
         essay.faq = form.faq.data
@@ -299,8 +325,9 @@ def manage(subject_id):
     subject_form = SubjectForm()
     point_form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if point_form.validate_on_submit():
+        s = Subject.query.filter_by(id=point_form.subject.data).first()
         point = Points(name=point_form.name.data,
-                subject=point_form.subject.data)
+                subject=point_form.subject.data, subject_name=s.name)
         db.session.add(point)
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=point.subject))
@@ -334,6 +361,8 @@ def edit_point(id):
     if form.validate_on_submit():
         point.name = form.name.data
         point.subject = form.subject.data
+        s = Subject.query.filter_by(id=point.subject).first()
+        point.subject_name = s.name
         sc = SingleChoice.query.filter_by(knowledge_points=point.id).all()
         for i in range(len(sc)):
             if sc[i].subject == point.subject:
@@ -459,6 +488,11 @@ def edit_test_paper_sc(tp_id, id):
         new_id = form.new_id.data
         test_paper = TestPaper.query.filter_by(id=tp_id).first()
         p = handle_str(test_paper.single_choice)
+        for i in range(len(p)):
+            if p[i] == new_id:
+                flash(u'试题重复')
+                return redirect(url_for('main.test_paper', id=tp_id))
+
         for i in range(len(p)):
             if p[i] == id:
                 p[i] = new_id
