@@ -2,10 +2,10 @@
 一个帮助教师维护题库和自动组卷的Web app，使用MVC模式。
 
 ## 如何使用
-1. 安装Python：
+1.安装Python：
 [`Python官方网站`](www.python.org)
 
-2. 安装Virtual env
+2.安装Virtual env
 Linux用户：
 ``` sh
 $ sudo apt-get install python-virtualenv
@@ -35,12 +35,13 @@ $ source venv/bin/activate
 $ venv\Scripts\activate
 ```
 
-3. 根据requirements.txt安装依赖
+3.根据requirements.txt安装依赖
 ``` sh
 (venv) $ pip install -r requirements.txt
 ```
 
-4. 根据config.py中设置mysql相关的环境变量，执行
+4.根据config.py中设置mysql相关的环境变量，执行
 ``` sh
 python manage.py db upgrade
 ```
+生成数据库
