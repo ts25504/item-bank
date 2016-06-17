@@ -59,8 +59,12 @@ target/
 # SQLite databases
 *.sqlite
 
+
 # Virtual environment
 venv
 
 # Upload File
 app/static/upload/
+
+# Env options
+env.sh
