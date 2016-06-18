@@ -1,3 +1,3 @@
-[submodule "app/genetic_algorithm"]
+[submodule "genetic_algorithm"]
     path=genetic_algorithm
     url=https://github.com/ts25504/genetic_algorithm.git
