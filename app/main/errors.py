@@ -1,5 +1,5 @@
 from flask import render_template, request
-from . import main
+from app.main import main
 
 @main.app_errorhandler(403)
 def forbidden(e):

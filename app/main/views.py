@@ -7,20 +7,20 @@ import random
 import urllib
 import datetime
 
+from app.main import main
 from flask import render_template, redirect, url_for, request, current_app, \
         make_response, flash
 from flask.ext.login import login_required, current_user
-from . import main
-from ..models import SingleChoice, BlankFill, Essay, Points, Subject, TestPaper
+from app.models import SingleChoice, BlankFill, Essay, Points, Subject, TestPaper
 from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
         TestPaperConstraintForm, PointForm, SubjectForm, TestPaperReplaceForm, \
         TestPaperNameForm
-from .. import db
+from app import db
 
-from ..genetic_algorithm.db import DB
-from ..genetic_algorithm.paper import Paper
-from ..genetic_algorithm.problem import Problem
-from ..genetic_algorithm.main import Genetic
+from genetic_algorithm.db import DB
+from genetic_algorithm.paper import Paper
+from genetic_algorithm.problem import Problem
+from genetic_algorithm.main import Genetic
 
 @main.route('/')
 def index_or_login():

@@ -7,7 +7,7 @@ from wtforms import widgets
 from wtforms import StringField, TextAreaField, SubmitField, IntegerField, \
         SelectField, FloatField, Field
 from wtforms.validators import Required, Length, NumberRange
-from ..models import SingleChoice, BlankFill, Essay, Points
+from app.models import SingleChoice, BlankFill, Essay, Points
 
 class SingleChoiceForm(Form):
     subject = SelectField(u'科目', coerce=int)
