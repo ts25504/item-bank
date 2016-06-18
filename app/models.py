@@ -21,6 +21,12 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def to_json(self):
+        json = {
+            'username': self.username
+        }
+        return json
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -43,6 +49,22 @@ class SingleChoice(db.Model):
     B = db.Column(db.Text)
     C = db.Column(db.Text)
     D = db.Column(db.Text)
+
+    def to_json(self):
+        json = {
+            'question': self.question,
+            'difficult_level': self.difficult_level,
+            'faq': self.faq,
+            'timestamp': self.timestamp,
+            'knowledge_points': self.knowledge_points_name,
+            'subject': self.subject_name,
+            'answer': self.answer,
+            'A': self.A,
+            'B': self.B,
+            'C': self.C,
+            'D': self.D,
+        }
+        return json
 
     @staticmethod
     def generate_fake(count=200):
@@ -86,6 +108,18 @@ class BlankFill(db.Model):
 
     answer = db.Column(db.String(255))
 
+    def to_json(self):
+        json = {
+            'question': self.question,
+            'difficult_level': self.difficult_level,
+            'faq': self.faq,
+            'timestamp': self.timestamp,
+            'knowledge_points': self.knowledge_points_name,
+            'subject': self.subject_name,
+            'answer': self.answer,
+        }
+        return json
+
     @staticmethod
     def generate_fake(count=200):
         from random import seed, random, randint
@@ -123,6 +157,18 @@ class Essay(db.Model):
     subject_name = db.Column(db.String(127))
 
     answer = db.Column(db.Text)
+
+    def to_json(self):
+        json = {
+            'question': self.question,
+            'difficult_level': self.difficult_level,
+            'faq': self.faq,
+            'timestamp': self.timestamp,
+            'knowledge_points': self.knowledge_points_name,
+            'subject': self.subject_name,
+            'answer': self.answer,
+        }
+        return json
 
     @staticmethod
     def generate_fake(count=100):
