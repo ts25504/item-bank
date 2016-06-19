@@ -1,5 +1,6 @@
-from flask import render_template, request
+from flask import render_template
 from app.main import main
+
 
 @main.app_errorhandler(403)
 def forbidden(e):

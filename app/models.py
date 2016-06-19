@@ -1,8 +1,8 @@
 from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import current_app
 from flask.ext.login import UserMixin
 from app import db, login_manager
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -27,9 +27,11 @@ class User(UserMixin, db.Model):
         }
         return json
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 class SingleChoice(db.Model):
     __tablename__ = 'single_choice'
@@ -75,15 +77,15 @@ class SingleChoice(db.Model):
         seed()
         for i in range(count):
             sc = SingleChoice(question=forgery_py.lorem_ipsum.sentence(),
-                    difficult_level=random(),
-                    faq=forgery_py.lorem_ipsum.sentence(),
-                    knowledge_points=randint(1, 10),
-                    subject=1,
-                    answer=choice(['A', 'B', 'C', 'D']),
-                    A=forgery_py.lorem_ipsum.sentence(),
-                    B=forgery_py.lorem_ipsum.sentence(),
-                    C=forgery_py.lorem_ipsum.sentence(),
-                    D=forgery_py.lorem_ipsum.sentence())
+                              difficult_level=random(),
+                              faq=forgery_py.lorem_ipsum.sentence(),
+                              knowledge_points=randint(1, 10),
+                              subject=1,
+                              answer=choice(['A', 'B', 'C', 'D']),
+                              A=forgery_py.lorem_ipsum.sentence(),
+                              B=forgery_py.lorem_ipsum.sentence(),
+                              C=forgery_py.lorem_ipsum.sentence(),
+                              D=forgery_py.lorem_ipsum.sentence())
 
             p = Points.query.filter_by(id=sc.knowledge_points).first()
             sc.knowledge_points_name = p.name
@@ -92,6 +94,7 @@ class SingleChoice(db.Model):
 
             db.session.add(sc)
             db.session.commit()
+
 
 class BlankFill(db.Model):
     __tablename__ = 'blank_fill'
@@ -129,11 +132,11 @@ class BlankFill(db.Model):
         seed()
         for i in range(count):
             bf = BlankFill(question=forgery_py.lorem_ipsum.sentence(),
-                    difficult_level=random(),
-                    faq=forgery_py.lorem_ipsum.sentence(),
-                    knowledge_points=randint(1, 10),
-                    subject=1,
-                    answer=forgery_py.lorem_ipsum.sentence())
+                           difficult_level=random(),
+                           faq=forgery_py.lorem_ipsum.sentence(),
+                           knowledge_points=randint(1, 10),
+                           subject=1,
+                           answer=forgery_py.lorem_ipsum.sentence())
 
             p = Points.query.filter_by(id=bf.knowledge_points).first()
             bf.knowledge_points_name = p.name
@@ -142,6 +145,7 @@ class BlankFill(db.Model):
 
             db.session.add(bf)
             db.session.commit()
+
 
 class Essay(db.Model):
     __tablename__ = 'essay'
@@ -179,11 +183,11 @@ class Essay(db.Model):
         seed()
         for i in range(count):
             es = Essay(question=forgery_py.lorem_ipsum.sentence(),
-                    difficult_level=random(),
-                    faq=forgery_py.lorem_ipsum.sentence(),
-                    knowledge_points=randint(1, 10),
-                    subject=1,
-                    answer=forgery_py.lorem_ipsum.sentence())
+                       difficult_level=random(),
+                       faq=forgery_py.lorem_ipsum.sentence(),
+                       knowledge_points=randint(1, 10),
+                       subject=1,
+                       answer=forgery_py.lorem_ipsum.sentence())
 
             p = Points.query.filter_by(id=es.knowledge_points).first()
             es.knowledge_points_name = p.name
@@ -193,6 +197,7 @@ class Essay(db.Model):
             db.session.add(es)
             db.session.commit()
 
+
 class Points(db.Model):
     __tablename__ = 'points'
     id = db.Column(db.Integer, primary_key=True)
@@ -200,10 +205,12 @@ class Points(db.Model):
     subject = db.Column(db.Integer)
     subject_name = db.Column(db.String(127))
 
+
 class Subject(db.Model):
     __tablename__ = 'subject'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(127))
+
 
 class TestPaper(db.Model):
     __tablename__ = 'test_paper'

@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
 
 import os
-import re
-import json
 import random
-import urllib
 import datetime
 
 from app.main import main
 from flask import render_template, redirect, url_for, request, current_app, \
         make_response, flash
 from flask.ext.login import login_required, current_user
-from app.models import SingleChoice, BlankFill, Essay, Points, Subject, TestPaper
+from app.models import SingleChoice, BlankFill, Essay, Points, Subject, \
+     TestPaper
 from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
-        TestPaperConstraintForm, PointForm, SubjectForm, TestPaperReplaceForm, \
-        TestPaperNameForm
+        TestPaperConstraintForm, PointForm, SubjectForm, \
+        TestPaperReplaceForm, TestPaperNameForm
 from app import db
 
 from genetic_algorithm.db import DB
 from genetic_algorithm.paper import Paper
 from genetic_algorithm.problem import Problem
 from genetic_algorithm.main import Genetic
+
 
 @main.route('/')
 def index_or_login():
@@ -29,17 +28,19 @@ def index_or_login():
     else:
         return redirect(url_for('auth.login'))
 
+
 @main.route('/index')
 @login_required
 def index():
     return render_template('index.html')
 
+
 @main.route('/single_choice', methods=['GET', 'POST'])
 @login_required
 def single_choice():
     form = SingleChoiceForm()
-    form.knowledge_points.choices = \
-            [(p.id, p.name) for p in Points.query.all()]
+    form.knowledge_points.choices = [
+        (p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
@@ -54,13 +55,18 @@ def single_choice():
             form.C.data = form.C.data[3:-6]
         if form.D.data[:3] == "<p>":
             form.D.data = form.D.data[3:-6]
-        single_choice = SingleChoice(question=form.question.data,
-                difficult_level=form.difficult_level.data,
-                faq=form.faq.data, A=form.A.data,
-                B=form.B.data, C=form.C.data, D=form.D.data,
-                knowledge_points=form.knowledge_points.data,
-                subject=form.subject.data,
-                answer=form.answer.data)
+
+        single_choice = SingleChoice(
+            question=form.question.data,
+            difficult_level=form.difficult_level.data,
+            faq=form.faq.data,
+            A=form.A.data,
+            B=form.B.data,
+            C=form.C.data,
+            D=form.D.data,
+            knowledge_points=form.knowledge_points.data,
+            subject=form.subject.data,
+            answer=form.answer.data)
 
         p = Points.query.filter_by(id=single_choice.knowledge_points).first()
         single_choice.knowledge_points_name = p.name
@@ -77,14 +83,16 @@ def single_choice():
             error_out=False)
     single_choice = pagination.items
     return render_template('single_choice.html', form=form,
-            single_choice=single_choice, pagination=pagination)
+                           single_choice=single_choice, pagination=pagination)
+
 
 @main.route('/edit_single_choice/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_single_choice(id):
     single_choice = SingleChoice.query.get_or_404(id)
     form = SingleChoiceForm()
-    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.knowledge_points.choices = [
+        (p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
@@ -130,6 +138,7 @@ def edit_single_choice(id):
     form.answer.data = single_choice.answer
     return render_template('edit_single_choice.html', form=form)
 
+
 @main.route('/delete_single_choice/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_single_choice(id):
@@ -141,23 +150,27 @@ def delete_single_choice(id):
         return redirect(url_for('main.single_choice'))
     return render_template('delete_single_choice.html', form=form)
 
+
 @main.route('/blank_fill', methods=['GET', 'POST'])
 @login_required
 def blank_fill():
     form = BlankFillForm()
-    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.knowledge_points.choices = [
+        (p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
         if p.subject != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.blank_fill'))
-        blank_fill = BlankFill(question=form.question.data,
-                difficult_level=form.difficult_level.data,
-                faq=form.faq.data,
-                knowledge_points=form.knowledge_points.data,
-                subject=form.subject.data,
-                answer=form.answer.data)
+
+        blank_fill = BlankFill(
+            question=form.question.data,
+            difficult_level=form.difficult_level.data,
+            faq=form.faq.data,
+            knowledge_points=form.knowledge_points.data,
+            subject=form.subject.data,
+            answer=form.answer.data)
 
         p = Points.query.filter_by(id=blank_fill.knowledge_points).first()
         blank_fill.knowledge_points_name = p.name
@@ -174,14 +187,16 @@ def blank_fill():
             error_out=False)
     blank_fill = pagination.items
     return render_template('blank_fill.html', form=form,
-            blank_fill=blank_fill, pagination=pagination)
+                           blank_fill=blank_fill, pagination=pagination)
+
 
 @main.route('/edit_blank_fill/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_blank_fill(id):
     blank_fill = BlankFill.query.get_or_404(id)
     form = BlankFillForm()
-    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.knowledge_points.choices = [
+        (p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
@@ -212,6 +227,7 @@ def edit_blank_fill(id):
     form.answer.data = blank_fill.answer
     return render_template('edit_blank_fill.html', form=form)
 
+
 @main.route('/delete_blank_fill/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_blank_fill(id):
@@ -223,23 +239,27 @@ def delete_blank_fill(id):
         return redirect(url_for('main.blank_fill'))
     return render_template('delete_blank_fill.html', form=form)
 
+
 @main.route('/essay', methods=['GET', 'POST'])
 @login_required
 def essay():
     form = EssayForm()
-    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.knowledge_points.choices = [
+        (p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
         if p.subject != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.essay'))
-        essay = Essay(question=form.question.data,
-                difficult_level=form.difficult_level.data,
-                faq=form.faq.data,
-                knowledge_points=form.knowledge_points.data,
-                subject=form.subject.data,
-                answer=form.answer.data)
+
+        essay = Essay(
+            question=form.question.data,
+            difficult_level=form.difficult_level.data,
+            faq=form.faq.data,
+            knowledge_points=form.knowledge_points.data,
+            subject=form.subject.data,
+            answer=form.answer.data)
 
         p = Points.query.filter_by(id=essay.knowledge_points).first()
         essay.knowledge_points_name = p.name
@@ -256,14 +276,16 @@ def essay():
             error_out=False)
     essay = pagination.items
     return render_template('essay.html', form=form,
-            essay=essay, pagination=pagination)
+                           essay=essay, pagination=pagination)
+
 
 @main.route('/edit_essay/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_essay(id):
     essay = Essay.query.get_or_404(id)
     form = EssayForm()
-    form.knowledge_points.choices = [(p.id, p.name) for p in Points.query.all()]
+    form.knowledge_points.choices = [
+        (p.id, p.name) for p in Points.query.all()]
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
@@ -294,6 +316,7 @@ def edit_essay(id):
     form.answer.data = essay.answer
     return render_template('edit_essay.html', form=form)
 
+
 @main.route('/delete_essay/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_essay(id):
@@ -305,10 +328,12 @@ def delete_essay(id):
         return redirect(url_for('main.essay'))
     return render_template('delete_essay.html', form=form)
 
+
 @main.route('/about')
 @login_required
 def about():
     return render_template('about.html')
+
 
 @main.route('/manage/<int:subject_id>', methods=['GET', 'POST'])
 @login_required
@@ -327,7 +352,7 @@ def manage(subject_id):
     if point_form.validate_on_submit():
         s = Subject.query.filter_by(id=point_form.subject.data).first()
         point = Points(name=point_form.name.data,
-                subject=point_form.subject.data, subject_name=s.name)
+                       subject=point_form.subject.data, subject_name=s.name)
         db.session.add(point)
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=point.subject))
@@ -339,7 +364,8 @@ def manage(subject_id):
         return redirect(url_for('main.manage', subject_id=0))
 
     return render_template('manage.html', points=points, subject=subject,
-            point_form=point_form, subject_form=subject_form)
+                           point_form=point_form, subject_form=subject_form)
+
 
 @main.route('/delete_subject/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -351,6 +377,7 @@ def delete_subject(id):
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=0))
     return render_template('delete_subject.html', form=form)
+
 
 @main.route('/edit_point/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -395,6 +422,7 @@ def edit_point(id):
     form.subject.data = point.subject
     return render_template('edit_point.html', form=form)
 
+
 @main.route('/delete_point/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_point(id):
@@ -421,6 +449,7 @@ def delete_point(id):
         return redirect(url_for('main.manage', subject_id=point.subject))
     return render_template('delete_point.html', form=form)
 
+
 def handle_str(problems):
     problems = problems[1:]
     problems = problems[:-1]
@@ -428,6 +457,7 @@ def handle_str(problems):
     for i in range(len(ids)):
         ids[i] = long(ids[i])
     return ids
+
 
 @main.route('/test_papers')
 @login_required
@@ -439,7 +469,8 @@ def test_papers():
             error_out=False)
     test_papers = pagination.items
     return render_template('test_papers.html',
-            test_papers=test_papers, pagination=pagination)
+                           test_papers=test_papers, pagination=pagination)
+
 
 @main.route('/test_paper/<int:id>')
 @login_required
@@ -461,12 +492,14 @@ def test_paper(id):
     for es_id in es:
         item = Essay.query.filter_by(id=es_id).first()
         essay.append(item)
+
     return render_template('test_paper.html',
-            tp_id = test_paper.id,
-            name = name,
-            single_choice=single_choice,
-            blank_fill=blank_fill,
-            essay=essay)
+                           tp_id=test_paper.id,
+                           name=name,
+                           single_choice=single_choice,
+                           blank_fill=blank_fill,
+                           essay=essay)
+
 
 @main.route('/edit_test_paper_name/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -480,7 +513,9 @@ def edit_test_paper_name(id):
         return redirect(url_for('main.test_paper', id=id))
     return render_template('edit_test_paper.html', form=form)
 
-@main.route('/edit_test_paper_sc/<int:tp_id>.<int:id>', methods=['GET', 'POST'])
+
+@main.route('/edit_test_paper_sc/<int:tp_id>.<int:id>',
+            methods=['GET', 'POST'])
 @login_required
 def edit_test_paper_sc(tp_id, id):
     form = TestPaperReplaceForm()
@@ -505,7 +540,9 @@ def edit_test_paper_sc(tp_id, id):
         return redirect(url_for('main.test_paper', id=tp_id))
     return render_template('edit_test_paper.html', form=form)
 
-@main.route('/edit_test_paper_bf/<int:tp_id>.<int:id>', methods=['GET', 'POST'])
+
+@main.route('/edit_test_paper_bf/<int:tp_id>.<int:id>',
+            methods=['GET', 'POST'])
 @login_required
 def edit_test_paper_bf(tp_id, id):
     form = TestPaperReplaceForm()
@@ -525,7 +562,9 @@ def edit_test_paper_bf(tp_id, id):
         return redirect(url_for('main.test_paper', id=tp_id))
     return render_template('edit_test_paper.html', form=form)
 
-@main.route('/edit_test_paper_es/<int:tp_id>.<int:id>', methods=['GET', 'POST'])
+
+@main.route('/edit_test_paper_es/<int:tp_id>.<int:id>',
+            methods=['GET', 'POST'])
 @login_required
 def edit_test_paper_es(tp_id, id):
     form = TestPaperReplaceForm()
@@ -545,6 +584,7 @@ def edit_test_paper_es(tp_id, id):
         return redirect(url_for('main.test_paper', id=tp_id))
     return render_template('edit_test_paper.html', form=form)
 
+
 @main.route('/delete_test_paper/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_test_paper(id):
@@ -556,18 +596,21 @@ def delete_test_paper(id):
         return redirect(url_for('main.test_papers'))
     return render_template('delete_test_paper.html', form=form)
 
-@main.route('/new_test_paper/<name>.<subject>.<float:difficulty>.<sc>.<bf>.<es>',
-        methods=['POST', 'GET'])
+
+@main.route(
+    '/new_test_paper/<name>.<subject>.<float:difficulty>.<sc>.<bf>.<es>',
+    methods=['POST', 'GET'])
 @login_required
 def new_test_paper(name, subject, difficulty, sc, bf, es):
     sub = Subject.query.filter_by(id=subject).first()
     subject_name = sub.name
     test_paper = TestPaper(name=name, subject=subject,
-            subject_name=subject_name,
-            single_choice=sc, blank_fill=bf, essay=es)
+                           subject_name=subject_name,
+                           single_choice=sc, blank_fill=bf, essay=es)
     db.session.add(test_paper)
     db.session.commit()
     return render_template('index.html')
+
 
 @main.route('/generate_test_paper', methods=['GET', 'POST'])
 @login_required
@@ -602,12 +645,13 @@ def generate_test_paper():
             paper.points.append(pp.id)
         for eps in each_point_score:
             paper.each_point_score.append(int(eps))
+
         paper.each_type_count = [single_choice_number,
-                blank_fill_number, essay_number]
+                                 blank_fill_number, essay_number]
         paper.each_type_score = [single_choice_score,
-                blank_fill_score, essay_score]
+                                 blank_fill_score, essay_score]
         paper.total_score = single_choice_score + blank_fill_score + \
-                essay_score
+            essay_score
 
         single_choice = SingleChoice.query.filter_by(subject=subject).all()
         blank_fill = BlankFill.query.filter_by(subject=subject).all()
@@ -667,20 +711,22 @@ def generate_test_paper():
                     es_ids.append(item.id)
 
         return render_template('new_test_paper.html',
-                name=name,
-                single_choice=single_choice,
-                blank_fill=blank_fill,
-                essay=essay,
-                sc_ids=sc_ids,
-                bf_ids=bf_ids,
-                es_ids=es_ids,
-                subject=subject,
-                difficulty=difficulty)
+                               name=name,
+                               single_choice=single_choice,
+                               blank_fill=blank_fill,
+                               essay=essay,
+                               sc_ids=sc_ids,
+                               bf_ids=bf_ids,
+                               es_ids=es_ids,
+                               subject=subject,
+                               difficulty=difficulty)
     return render_template('generate_test_paper.html', form=form)
+
 
 def gen_rnd_filename():
     filename_prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
+
 
 @main.route('/ckupload/', methods=['POST', 'OPTIONS'])
 @login_required
@@ -707,7 +753,7 @@ def ckupload():
             url = url_for('static', filename='%s/%s' % ('upload', rnd_name))
     else:
         error = 'post error'
-    res = """<script type="text/javascript"> 
+    res = """<script type="text/javascript">
              window.parent.CKEDITOR.tools.callFunction(%s, '%s', '%s');
              </script>""" % (callback, url, error)
     response = make_response(res)

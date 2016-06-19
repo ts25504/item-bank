@@ -2,6 +2,7 @@ import unittest
 from app import create_app, db
 from app.models import User
 
+
 class UserModelTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app('testing')
@@ -32,4 +33,3 @@ class UserModelTestCase(unittest.TestCase):
         u = User(password='cat')
         u2 = User(password='cat')
         self.assertTrue(u.password_hash != u2.password_hash)
-

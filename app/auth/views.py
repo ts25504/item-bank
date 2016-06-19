@@ -1,12 +1,11 @@
 # *- coding: utf-8 -*
 
-from flask import render_template, redirect, request, url_for, flash
-from flask.ext.login import login_user, logout_user, login_required, \
-        current_user
+from flask import render_template, redirect, url_for, flash
+from flask.ext.login import login_user, logout_user, login_required
 from app.auth import auth
 from app.models import User
-from app import db
 from forms import LoginForm
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -18,6 +17,7 @@ def login():
             return redirect(url_for('main.index'))
         flash(u'账号或密码错误')
     return render_template('auth/login.html', form=form)
+
 
 @auth.route('/logout')
 @login_required
