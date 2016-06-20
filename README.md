@@ -1,9 +1,9 @@
 # Test paper generator
-一个帮助教师维护题库和自动组卷的Web app，使用MVC模式。
+一个帮助教师维护题库和自动组卷的Web app，基于Flask框架，使用MVC模式。
 
 ## 如何使用
 1.安装Python：
-[`Python官方网站`](www.python.org)
+[`Python官方网站`](https://www.python.org)
 
 2.安装Virtual env
 Linux用户：
