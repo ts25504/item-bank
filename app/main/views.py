@@ -12,7 +12,7 @@ from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
         TestPaperReplaceForm, TestPaperNameForm
 from app import db
 from app.main import main
-from app.models import SingleChoice, BlankFill, Essay, Points, Subject, \
+from app.model.models import SingleChoice, BlankFill, Essay, Points, Subject, \
      TestPaper
 
 from genetic_algorithm.db import DB

@@ -1,6 +1,6 @@
 import unittest
 from app import create_app, db
-from app.models import User
+from app.model.models import User
 
 
 class UserModelTestCase(unittest.TestCase):
@@ -33,10 +33,3 @@ class UserModelTestCase(unittest.TestCase):
         u = User(password='cat')
         u2 = User(password='cat')
         self.assertTrue(u.password_hash != u2.password_hash)
-
-    def test_to_json(self):
-        u = User(password='cat')
-        db.session.add(u)
-        db.session.commit()
-        json_user = u.to_json()
-        self.assertTrue(json_user.has_key('username'))
