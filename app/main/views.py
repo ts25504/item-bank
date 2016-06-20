@@ -4,16 +4,16 @@ import os
 import random
 import datetime
 
-from app.main import main
 from flask import render_template, redirect, url_for, request, current_app, \
         make_response, flash
 from flask.ext.login import login_required, current_user
-from app.models import SingleChoice, BlankFill, Essay, Points, Subject, \
-     TestPaper
 from forms import SingleChoiceForm, BlankFillForm, EssayForm, DeleteForm, \
         TestPaperConstraintForm, PointForm, SubjectForm, \
         TestPaperReplaceForm, TestPaperNameForm
 from app import db
+from app.main import main
+from app.models import SingleChoice, BlankFill, Essay, Points, Subject, \
+     TestPaper
 
 from genetic_algorithm.db import DB
 from genetic_algorithm.paper import Paper
