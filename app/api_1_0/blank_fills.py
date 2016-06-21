@@ -1,6 +1,6 @@
 from flask import jsonify
 from app.api_1_0 import api
-from app.model.models import BlankFill
+from app.model.blank_fill_model import BlankFill
 
 
 @api.route('/blank_fill/')

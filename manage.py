@@ -1,7 +1,12 @@
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 from app import create_app, db
-from app.model.models import User, SingleChoice, BlankFill, Essay, Points, Subject
+from app.model.user_model import User
+from app.model.single_choice_model import SingleChoice
+from app.model.blank_fill_model import BlankFill
+from app.model.essay_model import Essay
+from app.model.point_model import Points
+from app.model.subject_model import Subject
 
 app = create_app('default')
 manager = Manager(app)

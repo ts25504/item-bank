@@ -1,6 +1,6 @@
 from flask import jsonify
 from app.api_1_0 import api
-from app.model.models import Essay
+from app.model.essay_model import Essay
 
 
 @api.route('/essay/')
