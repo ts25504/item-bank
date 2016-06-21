@@ -6,6 +6,7 @@
 [`Python官方网站`](https://www.python.org)
 
 2.安装Virtual env
+
 Linux用户：
 ``` sh
 $ sudo apt-get install python-virtualenv
@@ -45,3 +46,20 @@ $ venv\Scripts\activate
 python manage.py db upgrade
 ```
 生成数据库
+
+5.测试相关命令
+
+运行测试服务器
+```sh
+python manage.py runserver
+```
+
+执行测试代码
+```sh
+python manage.py test
+```
+
+打开shell
+```sh
+python manage.py shell
+```
