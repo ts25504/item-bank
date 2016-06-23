@@ -20,3 +20,23 @@ class ClientTestCase(unittest.TestCase):
     def test_get_index(self):
         response = self.client.get('/index', follow_redirects=True)
         self.assertTrue(re.search('欢迎', response.data))
+
+    def test_get_about(self):
+        response = self.client.get('/about', follow_redirects=True)
+        self.assertTrue(re.search('关于', response.data))
+
+    def test_get_single_choice(self):
+        response = self.client.get('/single_choice', follow_redirects=True)
+        self.assertTrue(re.search('单选题', response.data))
+
+    def test_get_blank_fill(self):
+        response = self.client.get('/blank_fill', follow_redirects=True)
+        self.assertTrue(re.search('填空题', response.data))
+
+    def test_get_essay(self):
+        response = self.client.get('/essay', follow_redirects=True)
+        self.assertTrue(re.search('问答题', response.data))
+
+    def test_get_test_paper(self):
+        response = self.client.get('/test_papers', follow_redirects=True)
+        self.assertTrue(re.search('试卷管理', response.data))
