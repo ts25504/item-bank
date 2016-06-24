@@ -4,7 +4,7 @@
 
 <h1 class="page-header">{{ name }}</h1>
 <h3>单选题</h3>
-<ul class="posts sortable">
+<ul class="posts">
     {% for sc in single_choice %}
     <li class="post">
     <div class="post-content">
@@ -32,7 +32,7 @@
 </ul>
 
 <h3>填空题</h3>
-<ul class="posts sortable">
+<ul class="posts">
     {% for bf in blank_fill %}
     <li class="post">
         <div class="post-content">
@@ -53,7 +53,7 @@
     {% endfor %}
 </ul>
 <h3>问答题</h3>
-<ul class="posts sortable">
+<ul class="posts">
     {% for es in essay %}
     <li class="post">
         <div class="post-content">
@@ -76,22 +76,4 @@
 </ul>
 <button class="btn btn-default" onclick="window.location='{{ url_for('main.new_test_paper', name=name, subject=subject, difficulty=difficulty, sc=sc_ids, bf=bf_ids, es=es_ids) }}'">保存试卷</button>
 <button class="btn btn-default" onclick="location.reload();">重新生成试卷</button>
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui-1.11.4.custom/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript">
-      $(function() {
-        $( ".sortable" ).sortable({
-          revert: true
-        });
-        $( ".draggable" ).draggable({
-          connectToSortable: ".sortable",
-          helper: "clone",
-          revert: "invalid"
-        });
-        $( "ul, li" ).disableSelection();
-      });
-    </script>
 {% endblock %}
