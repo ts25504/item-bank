@@ -262,9 +262,6 @@ def make_es_problem_list(subject, number, score):
 def make_db(subject, single_choice_number, blank_fill_number, essay_number,
             single_choice_score, blank_fill_score, essay_score):
 
-    blank_fill = BlankFill.query.filter_by(subject=subject).all()
-    essay = Essay.query.filter_by(subject=subject).all()
-
     problem_list = []
     problem_list += make_sc_problem_list(subject,
                                          single_choice_number,
@@ -273,7 +270,6 @@ def make_db(subject, single_choice_number, blank_fill_number, essay_number,
     problem_list += make_bf_problem_list(subject,
                                          blank_fill_number,
                                          blank_fill_score)
-
 
     problem_list += make_es_problem_list(subject,
                                          essay_number,
@@ -343,6 +339,7 @@ def do_generate_test_paper(form):
                            es_ids=es_ids,
                            subject=subject,
                            difficulty=difficulty)
+
 
 @main.route('/generate_test_paper', methods=['GET', 'POST'])
 @login_required
