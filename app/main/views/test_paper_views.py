@@ -181,112 +181,175 @@ def new_test_paper(name, subject, difficulty, sc, bf, es):
     return render_template('index.html')
 
 
-@main.route('/generate_test_paper', methods=['GET', 'POST'])
-@login_required
-def generate_test_paper():
-    single_choice = []
-    blank_fill = []
-    essay = []
+def make_paper(points, difficulty, each_point_score, single_choice_number,
+               blank_fill_number, essay_number, single_choice_score,
+               blank_fill_score, essay_score):
+
+    paper = Paper()
+    paper.id = 1
+    paper.difficulty = difficulty
+    for p in points:
+        pp = Points.query.filter_by(name=p).first()
+        paper.points.append(pp.id)
+    for eps in each_point_score:
+        paper.each_point_score.append(int(eps))
+
+    paper.each_type_count = [single_choice_number,
+                             blank_fill_number, essay_number]
+    paper.each_type_score = [single_choice_score,
+                             blank_fill_score, essay_score]
+    paper.total_score = single_choice_score + blank_fill_score + \
+        essay_score
+
+    return paper
+
+
+def make_problem(id, type, difficulty, points, score):
+    p = Problem()
+    p.id = id
+    p.type = type
+    p.difficulty = difficulty
+    p.points.append(points)
+    p.score = score
+    return p
+
+
+def make_sc_problem_list(subject, number, score):
+    single_choice = SingleChoice.query.filter_by(subject=subject).all()
+    problem_list = []
+    if number == 0:
+        return problem_list
+
+    per_score = score / number
+    for sc in single_choice:
+        p = make_problem(sc.id, 1, sc.difficult_level, sc.knowledge_points,
+                         per_score)
+        problem_list.append(p)
+
+    return problem_list
+
+
+def make_bf_problem_list(subject, number, score):
+    blank_fill = BlankFill.query.filter_by(subject=subject).all()
+    problem_list = []
+    if number == 0:
+        return problem_list
+
+    per_score = score / number
+    for bf in blank_fill:
+        p = make_problem(bf.id, 2, bf.difficult_level, bf.knowledge_points,
+                         per_score)
+        problem_list.append(p)
+
+    return problem_list
+
+
+def make_es_problem_list(subject, number, score):
+    essay = Essay.query.filter_by(subject=subject).all()
+    problem_list = []
+    if number == 0:
+        return problem_list
+
+    per_score = score / number
+    for es in essay:
+        p = make_problem(es.id, 3, es.difficult_level, es.knowledge_points,
+                         per_score)
+        problem_list.append(p)
+
+    return problem_list
+
+
+def make_db(subject, single_choice_number, blank_fill_number, essay_number,
+            single_choice_score, blank_fill_score, essay_score):
+
+    blank_fill = BlankFill.query.filter_by(subject=subject).all()
+    essay = Essay.query.filter_by(subject=subject).all()
+
+    problem_list = []
+    problem_list += make_sc_problem_list(subject,
+                                         single_choice_number,
+                                         single_choice_score)
+
+    problem_list += make_bf_problem_list(subject,
+                                         blank_fill_number,
+                                         blank_fill_score)
+
+
+    problem_list += make_es_problem_list(subject,
+                                         essay_number,
+                                         essay_score)
+
+    db = DB()
+    db.create_from_problem_list(problem_list)
+
+    return db
+
+
+def do_generate_test_paper(form):
+    name = form.name.data
+    subject = form.subject.data
+    single_choice_number = form.single_choice_number.data
+    single_choice_score = form.single_choice_score.data
+    blank_fill_number = form.blank_fill_number.data
+    blank_fill_score = form.blank_fill_score.data
+    essay_number = form.essay_number.data
+    essay_score = form.essay_score.data
+    difficulty = form.difficulty.data
+    points = form.points.data
+    each_point_score = form.each_point_score.data
+
+    paper = make_paper(points, difficulty, each_point_score,
+                       single_choice_number, blank_fill_number,
+                       essay_number, single_choice_score, blank_fill_score,
+                       essay_score)
+
+    db = make_db(subject, single_choice_number, blank_fill_number,
+                 essay_number, single_choice_score, blank_fill_score,
+                 essay_score)
+
+    genetic = Genetic(paper, db)
+    u = genetic.run(0.98)
+
     sc_ids = []
     bf_ids = []
     es_ids = []
-    each_point_score = []
+    single_choice = []
+    blank_fill = []
+    essay = []
+    for p in u.problem_list:
+        if p.type == 1:
+            sc = SingleChoice.query.filter_by(id=p.id).all()
+            single_choice += sc
+            for item in sc:
+                sc_ids.append(item.id)
+        if p.type == 2:
+            bf = BlankFill.query.filter_by(id=p.id).all()
+            blank_fill += bf
+            for item in bf:
+                bf_ids.append(item.id)
+        if p.type == 3:
+            es = Essay.query.filter_by(id=p.id).all()
+            essay += es
+            for item in es:
+                es_ids.append(item.id)
+
+    return render_template('new_test_paper.html',
+                           name=name,
+                           single_choice=single_choice,
+                           blank_fill=blank_fill,
+                           essay=essay,
+                           sc_ids=sc_ids,
+                           bf_ids=bf_ids,
+                           es_ids=es_ids,
+                           subject=subject,
+                           difficulty=difficulty)
+
+@main.route('/generate_test_paper', methods=['GET', 'POST'])
+@login_required
+def generate_test_paper():
     form = TestPaperConstraintForm()
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
-        name = form.name.data
-        subject = form.subject.data
-        single_choice_number = form.single_choice_number.data
-        single_choice_score = form.single_choice_score.data
-        blank_fill_number = form.blank_fill_number.data
-        blank_fill_score = form.blank_fill_score.data
-        essay_number = form.essay_number.data
-        essay_score = form.essay_score.data
-        difficulty = form.difficulty.data
-        points = form.points.data
-        each_point_score = form.each_point_score.data
+        return do_generate_test_paper(form)
 
-        paper = Paper()
-        paper.id = 1
-        paper.difficulty = difficulty
-        for p in points:
-            pp = Points.query.filter_by(name=p).first()
-            paper.points.append(pp.id)
-        for eps in each_point_score:
-            paper.each_point_score.append(int(eps))
-
-        paper.each_type_count = [single_choice_number,
-                                 blank_fill_number, essay_number]
-        paper.each_type_score = [single_choice_score,
-                                 blank_fill_score, essay_score]
-        paper.total_score = single_choice_score + blank_fill_score + \
-            essay_score
-
-        single_choice = SingleChoice.query.filter_by(subject=subject).all()
-        blank_fill = BlankFill.query.filter_by(subject=subject).all()
-        essay = Essay.query.filter_by(subject=subject).all()
-
-        problem_list = []
-        for sc in single_choice:
-            p = Problem()
-            p.id = sc.id
-            p.type = 1
-            p.difficulty = sc.difficult_level
-            p.points.append(sc.knowledge_points)
-            p.score = single_choice_score / single_choice_number
-            problem_list.append(p)
-
-        for bf in blank_fill:
-            p = Problem()
-            p.id = bf.id
-            p.type = 2
-            p.difficulty = bf.difficult_level
-            p.points.append(bf.knowledge_points)
-            p.score = blank_fill_score / blank_fill_number
-            problem_list.append(p)
-
-        for es in essay:
-            p = Problem()
-            p.id = es.id
-            p.type = 3
-            p.difficulty = es.difficult_level
-            p.points.append(es.knowledge_points)
-            p.score = essay_score / essay_number
-            problem_list.append(p)
-
-        db = DB()
-        db.create_from_problem_list(problem_list)
-        genetic = Genetic(paper, db)
-        u = genetic.run(0.98)
-
-        single_choice = []
-        blank_fill = []
-        essay = []
-        for p in u.problem_list:
-            if p.type == 1:
-                sc = SingleChoice.query.filter_by(id=p.id).all()
-                single_choice += sc
-                for item in sc:
-                    sc_ids.append(item.id)
-            if p.type == 2:
-                bf = BlankFill.query.filter_by(id=p.id).all()
-                blank_fill += bf
-                for item in bf:
-                    bf_ids.append(item.id)
-            if p.type == 3:
-                es = Essay.query.filter_by(id=p.id).all()
-                essay += es
-                for item in es:
-                    es_ids.append(item.id)
-
-        return render_template('new_test_paper.html',
-                               name=name,
-                               single_choice=single_choice,
-                               blank_fill=blank_fill,
-                               essay=essay,
-                               sc_ids=sc_ids,
-                               bf_ids=bf_ids,
-                               es_ids=es_ids,
-                               subject=subject,
-                               difficulty=difficulty)
     return render_template('generate_test_paper.html', form=form)
