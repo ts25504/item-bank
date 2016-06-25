@@ -45,7 +45,7 @@ def blank_fill():
             page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
             error_out=False)
     blank_fill = pagination.items
-    return render_template('blank_fill.html', form=form,
+    return render_template('blank_fill/blank_fill.html', form=form,
                            blank_fill=blank_fill, pagination=pagination)
 
 
@@ -84,7 +84,7 @@ def edit_blank_fill(id):
     form.knowledge_points.data = blank_fill.knowledge_points
     form.subject.data = blank_fill.subject
     form.answer.data = blank_fill.answer
-    return render_template('edit_blank_fill.html', form=form)
+    return render_template('blank_fill/edit_blank_fill.html', form=form)
 
 
 @main.route('/delete_blank_fill/<int:id>', methods=['GET', 'POST'])
@@ -96,4 +96,4 @@ def delete_blank_fill(id):
         db.session.delete(blank_fill)
         db.session.commit()
         return redirect(url_for('main.blank_fill'))
-    return render_template('delete_blank_fill.html', form=form)
+    return render_template('blank_fill/delete_blank_fill.html', form=form)

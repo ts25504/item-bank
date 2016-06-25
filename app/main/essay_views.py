@@ -45,7 +45,7 @@ def essay():
             page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
             error_out=False)
     essay = pagination.items
-    return render_template('essay.html', form=form,
+    return render_template('essay/essay.html', form=form,
                            essay=essay, pagination=pagination)
 
 
@@ -84,7 +84,7 @@ def edit_essay(id):
     form.knowledge_points.data = essay.knowledge_points
     form.subject.data = essay.subject
     form.answer.data = essay.answer
-    return render_template('edit_essay.html', form=form)
+    return render_template('essay/edit_essay.html', form=form)
 
 
 @main.route('/delete_essay/<int:id>', methods=['GET', 'POST'])
@@ -96,4 +96,4 @@ def delete_essay(id):
         db.session.delete(essay)
         db.session.commit()
         return redirect(url_for('main.essay'))
-    return render_template('delete_essay.html', form=form)
+    return render_template('essay/delete_essay.html', form=form)

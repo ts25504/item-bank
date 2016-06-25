@@ -51,7 +51,7 @@ def edit_point(id):
 
     form.name.data = point.name
     form.subject.data = point.subject
-    return render_template('edit_point.html', form=form)
+    return render_template('manage/edit_point.html', form=form)
 
 
 @main.route('/delete_point/<int:id>', methods=['GET', 'POST'])
@@ -78,4 +78,4 @@ def delete_point(id):
         db.session.delete(point)
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=point.subject))
-    return render_template('delete_point.html', form=form)
+    return render_template('manage/delete_point.html', form=form)

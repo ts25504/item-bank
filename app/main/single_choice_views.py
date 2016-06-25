@@ -57,7 +57,7 @@ def single_choice():
             page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
             error_out=False)
     single_choice = pagination.items
-    return render_template('single_choice.html', form=form,
+    return render_template('single_choice/single_choice.html', form=form,
                            single_choice=single_choice, pagination=pagination)
 
 
@@ -111,7 +111,7 @@ def edit_single_choice(id):
     form.knowledge_points.data = single_choice.knowledge_points
     form.subject.data = single_choice.subject
     form.answer.data = single_choice.answer
-    return render_template('edit_single_choice.html', form=form)
+    return render_template('single_choice/edit_single_choice.html', form=form)
 
 
 @main.route('/delete_single_choice/<int:id>', methods=['GET', 'POST'])
@@ -123,4 +123,4 @@ def delete_single_choice(id):
         db.session.delete(single_choice)
         db.session.commit()
         return redirect(url_for('main.single_choice'))
-    return render_template('delete_single_choice.html', form=form)
+    return render_template('single_choice/delete_single_choice.html', form=form)

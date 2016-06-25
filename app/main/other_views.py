@@ -11,7 +11,7 @@ from app.main import main
 @main.route('/about')
 @login_required
 def about():
-    return render_template('about.html')
+    return render_template('common/about.html')
 
 
 def gen_rnd_filename():

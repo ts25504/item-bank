@@ -37,7 +37,7 @@ def test_papers():
             page, per_page=current_app.config['QUESTIONS_PER_PAGE'],
             error_out=False)
     test_papers = pagination.items
-    return render_template('test_papers.html',
+    return render_template('test_paper/test_papers.html',
                            test_papers=test_papers, pagination=pagination)
 
 
@@ -62,7 +62,7 @@ def test_paper(id):
         item = Essay.query.filter_by(id=es_id).first()
         essay.append(item)
 
-    return render_template('test_paper.html',
+    return render_template('test_paper/test_paper.html',
                            tp_id=test_paper.id,
                            name=name,
                            single_choice=single_choice,
@@ -80,7 +80,7 @@ def edit_test_paper_name(id):
         db.session.add(test_paper)
         db.session.commit()
         return redirect(url_for('main.test_paper', id=id))
-    return render_template('edit_test_paper.html', form=form)
+    return render_template('test_paper/edit_test_paper.html', form=form)
 
 
 @main.route('/edit_test_paper_sc/<int:tp_id>.<int:id>',
@@ -107,7 +107,7 @@ def edit_test_paper_sc(tp_id, id):
         db.session.add(test_paper)
         db.session.commit()
         return redirect(url_for('main.test_paper', id=tp_id))
-    return render_template('edit_test_paper.html', form=form)
+    return render_template('test_paper/edit_test_paper.html', form=form)
 
 
 @main.route('/edit_test_paper_bf/<int:tp_id>.<int:id>',
@@ -129,7 +129,7 @@ def edit_test_paper_bf(tp_id, id):
         db.session.add(test_paper)
         db.session.commit()
         return redirect(url_for('main.test_paper', id=tp_id))
-    return render_template('edit_test_paper.html', form=form)
+    return render_template('test_paper/edit_test_paper.html', form=form)
 
 
 @main.route('/edit_test_paper_es/<int:tp_id>.<int:id>',
@@ -151,7 +151,7 @@ def edit_test_paper_es(tp_id, id):
         db.session.add(test_paper)
         db.session.commit()
         return redirect(url_for('main.test_paper', id=tp_id))
-    return render_template('edit_test_paper.html', form=form)
+    return render_template('test_paper/edit_test_paper.html', form=form)
 
 
 @main.route('/delete_test_paper/<int:id>', methods=['GET', 'POST'])
@@ -163,7 +163,7 @@ def delete_test_paper(id):
         db.session.delete(test_paper)
         db.session.commit()
         return redirect(url_for('main.test_papers'))
-    return render_template('delete_test_paper.html', form=form)
+    return render_template('test_paper/delete_test_paper.html', form=form)
 
 
 @main.route(
@@ -178,7 +178,7 @@ def new_test_paper(name, subject, difficulty, sc, bf, es):
                            single_choice=sc, blank_fill=bf, essay=es)
     db.session.add(test_paper)
     db.session.commit()
-    return render_template('index.html')
+    return render_template('common/index.html')
 
 
 def make_paper(points, difficulty, each_point_score, single_choice_number,
@@ -329,7 +329,7 @@ def do_generate_test_paper(form):
             for item in es:
                 es_ids.append(item.id)
 
-    return render_template('new_test_paper.html',
+    return render_template('test_paper/new_test_paper.html',
                            name=name,
                            single_choice=single_choice,
                            blank_fill=blank_fill,
@@ -349,4 +349,4 @@ def generate_test_paper():
     if form.validate_on_submit():
         return do_generate_test_paper(form)
 
-    return render_template('generate_test_paper.html', form=form)
+    return render_template('test_paper/generate_test_paper.html', form=form)

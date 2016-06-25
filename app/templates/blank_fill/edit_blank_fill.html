@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}填空题 － 编辑{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>填空题－ 编辑</h1>
+</div>
+{% include 'blank_fill/_blank_fill_form.html' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="//cdn.ckeditor.com/4.4.6/full/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('question', {
+                    filebrowserUploadUrl: '/ckupload/',
+                    });
+        CKEDITOR.replace('faq', {
+                    filebrowserUploadUrl: '/ckupload/',
+                    });
+    </script>
+{% endblock %}

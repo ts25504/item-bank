@@ -35,7 +35,7 @@ def manage(subject_id):
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=0))
 
-    return render_template('manage.html', points=points, subject=subject,
+    return render_template('manage/manage.html', points=points, subject=subject,
                            point_form=point_form, subject_form=subject_form)
 
 
@@ -48,4 +48,4 @@ def delete_subject(id):
         db.session.delete(subject)
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=0))
-    return render_template('delete_subject.html', form=form)
+    return render_template('manage/delete_subject.html', form=form)

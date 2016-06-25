@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}问答题 － 编辑{% endblock %}
+{% block title %}单选题 － 编辑{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>问答题 － 编辑</h1>
+    <h1>单选题 － 编辑</h1>
 </div>
-{% include '_essay_form.html' %}
+{% include 'single_choice/_single_choice_form.html' %}
 {% endblock %}
 
 {% block scripts %}
@@ -20,7 +20,16 @@
         CKEDITOR.replace('faq', {
                     filebrowserUploadUrl: '/ckupload/',
                     });
-        CKEDITOR.replace('answer', {
+        CKEDITOR.replace('A', {
+                    filebrowserUploadUrl: '/ckupload/',
+                    });
+        CKEDITOR.replace('B', {
+                    filebrowserUploadUrl: '/ckupload/',
+                    });
+        CKEDITOR.replace('C', {
+                    filebrowserUploadUrl: '/ckupload/',
+                    });
+        CKEDITOR.replace('D', {
                     filebrowserUploadUrl: '/ckupload/',
                     });
     </script>
