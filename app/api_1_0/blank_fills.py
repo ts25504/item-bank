@@ -24,11 +24,10 @@ def get_blank_fills():
     })
 
 
-
 @api.route('/blank_fills/<int:id>')
 def get_blank_fill(id):
     bf = BlankFill.query.get_or_404(id)
-    return jsonify(blank_fill.to_json())
+    return jsonify(bf.to_json())
 
 
 @api.route('/blank_fills/<int:id>', methods=['PUT'])

@@ -35,8 +35,11 @@ def manage(subject_id):
         db.session.commit()
         return redirect(url_for('main.manage', subject_id=0))
 
-    return render_template('manage/manage.html', points=points, subject=subject,
-                           point_form=point_form, subject_form=subject_form)
+    return render_template('manage/manage.html',
+                           points=points,
+                           subject=subject,
+                           point_form=point_form,
+                           subject_form=subject_form)
 
 
 @main.route('/delete_subject/<int:id>', methods=['GET', 'POST'])

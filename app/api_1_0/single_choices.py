@@ -1,7 +1,6 @@
 from flask import jsonify, request, current_app, url_for
 from app.api_1_0 import api
 from app.model.single_choice_model import SingleChoice
-from app import db
 
 
 @api.route('/single_choices/')

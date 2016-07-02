@@ -27,7 +27,7 @@ def get_essays():
 @api.route('/essays/<int:id>')
 def get_essay(id):
     es = Essay.query.get_or_404(id)
-    return jsonify(essay.to_json())
+    return jsonify(es.to_json())
 
 
 @api.route('/essays/<int:id>', methods=['PUT'])

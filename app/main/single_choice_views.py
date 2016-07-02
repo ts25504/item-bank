@@ -123,4 +123,5 @@ def delete_single_choice(id):
         db.session.delete(single_choice)
         db.session.commit()
         return redirect(url_for('main.single_choice'))
-    return render_template('single_choice/delete_single_choice.html', form=form)
+    return render_template('single_choice/delete_single_choice.html',
+                           form=form)
