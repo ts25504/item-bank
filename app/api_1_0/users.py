@@ -7,7 +7,7 @@ from app.model.user_model import User
 def get_users():
     users = User.query.all()
     return jsonify(
-        {'users': [users.to_json()] for u in users})
+        {'users': [u.to_json()] for u in users})
 
 @api.route('/users/<int:id>')
 def get_user(id):
