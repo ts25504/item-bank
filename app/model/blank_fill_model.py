@@ -10,10 +10,10 @@ class BlankFill(db.Model):
     add_date = db.Column(db.Date, default=date.today)
     faq = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    knowledge_points = db.Column(db.Integer)
-    subject = db.Column(db.Integer)
-    knowledge_points_name = db.Column(db.String(127))
-    subject_name = db.Column(db.String(127))
+    points_id = db.Column(db.Integer, db.ForeignKey('points.id'))
+    points = db.relationship('Points', backref='blank_fill')
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))
+    subject = db.relationship('Subject', backref='blank_fill')
 
     answer = db.Column(db.String(255))
 
@@ -23,8 +23,8 @@ class BlankFill(db.Model):
             'difficult_level': self.difficult_level,
             'faq': self.faq,
             'timestamp': self.timestamp,
-            'knowledge_points': self.knowledge_points_name,
-            'subject': self.subject_name,
+            'points': self.points.name,
+            'subject': self.subject.name,
             'answer': self.answer,
         }
         return json
@@ -32,7 +32,6 @@ class BlankFill(db.Model):
     @staticmethod
     def generate_fake(count=200):
         from random import seed, random, randint
-        from models import Points, Subject
         import forgery_py
 
         seed()
@@ -40,14 +39,9 @@ class BlankFill(db.Model):
             bf = BlankFill(question=forgery_py.lorem_ipsum.sentence(),
                            difficult_level=random(),
                            faq=forgery_py.lorem_ipsum.sentence(),
-                           knowledge_points=randint(1, 10),
-                           subject=1,
+                           points_id=randint(1, 10),
+                           subject_id=1,
                            answer=forgery_py.lorem_ipsum.sentence())
-
-            p = Points.query.filter_by(id=bf.knowledge_points).first()
-            bf.knowledge_points_name = p.name
-            s = Subject.query.filter_by(id=bf.subject).first()
-            bf.subject_name = s.name
 
             db.session.add(bf)
             db.session.commit()

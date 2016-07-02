@@ -9,9 +9,9 @@
         <div class="post-content">
             <div class="post-date">
                 <span class="label label-primary">{{ bf.add_date }}</span>
-                <span class="label label-primary">科目: {{ bf.subject_name }}</span>
+                <span class="label label-primary">科目: {{ bf.subject.name }}</span>
                 <span class="label label-primary">难度: {{ bf.difficult_level }}</span>
-                <span class="label label-primary">知识点: {{ bf.knowledge_points_name }}</span>
+                <span class="label label-primary">知识点: {{ bf.points.name }}</span>
             </div>
             <div class="post-body">
                 <div class="post-bold"><p>{{ bf.id }}.</p></div>

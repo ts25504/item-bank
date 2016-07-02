@@ -19,7 +19,7 @@ def single_choice():
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
-        if p.subject != form.subject.data:
+        if p.subject_id != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.single_choice'))
         if form.A.data[:3] == "<p>":
@@ -39,14 +39,9 @@ def single_choice():
             B=form.B.data,
             C=form.C.data,
             D=form.D.data,
-            knowledge_points=form.knowledge_points.data,
-            subject=form.subject.data,
+            points_id=form.knowledge_points.data,
+            subject_id=form.subject.data,
             answer=form.answer.data)
-
-        p = Points.query.filter_by(id=single_choice.knowledge_points).first()
-        single_choice.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=single_choice.subject).first()
-        single_choice.subject_name = s.name
 
         db.session.add(single_choice)
         db.session.commit()
@@ -71,7 +66,7 @@ def edit_single_choice(id):
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
-        if p.subject != form.subject.data:
+        if p.subject_id != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.single_choice'))
         if form.A.data[:3] == "<p>":
@@ -89,13 +84,9 @@ def edit_single_choice(id):
         single_choice.B = form.B.data
         single_choice.C = form.C.data
         single_choice.D = form.D.data
-        single_choice.knowledge_points = form.knowledge_points.data
-        single_choice.subject = form.subject.data,
+        single_choice.points_id = form.knowledge_points.data
+        single_choice.subject_id = form.subject.data,
         single_choice.answer = form.answer.data
-        p = Points.query.filter_by(id=single_choice.knowledge_points).first()
-        single_choice.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=single_choice.subject).first()
-        single_choice.subject_name = s.name
 
         db.session.add(single_choice)
         db.session.commit()
@@ -108,8 +99,8 @@ def edit_single_choice(id):
     form.B.data = single_choice.B
     form.C.data = single_choice.C
     form.D.data = single_choice.D
-    form.knowledge_points.data = single_choice.knowledge_points
-    form.subject.data = single_choice.subject
+    form.knowledge_points.data = single_choice.points_id
+    form.subject.data = single_choice.subject_id
     form.answer.data = single_choice.answer
     return render_template('single_choice/edit_single_choice.html', form=form)
 

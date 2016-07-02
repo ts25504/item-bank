@@ -171,10 +171,7 @@ def delete_test_paper(id):
     methods=['POST', 'GET'])
 @login_required
 def new_test_paper(name, subject, difficulty, sc, bf, es):
-    sub = Subject.query.filter_by(id=subject).first()
-    subject_name = sub.name
     test_paper = TestPaper(name=name, subject=subject,
-                           subject_name=subject_name,
                            single_choice=sc, blank_fill=bf, essay=es)
     db.session.add(test_paper)
     db.session.commit()
@@ -215,14 +212,14 @@ def make_problem(id, type, difficulty, points, score):
 
 
 def make_sc_problem_list(subject, number, score):
-    single_choice = SingleChoice.query.filter_by(subject=subject).all()
+    single_choice = SingleChoice.query.filter_by(subject_id=subject).all()
     problem_list = []
     if number == 0:
         return problem_list
 
     per_score = score / number
     for sc in single_choice:
-        p = make_problem(sc.id, 1, sc.difficult_level, sc.knowledge_points,
+        p = make_problem(sc.id, 1, sc.difficult_level, sc.points_id,
                          per_score)
         problem_list.append(p)
 
@@ -230,14 +227,14 @@ def make_sc_problem_list(subject, number, score):
 
 
 def make_bf_problem_list(subject, number, score):
-    blank_fill = BlankFill.query.filter_by(subject=subject).all()
+    blank_fill = BlankFill.query.filter_by(subject_id=subject).all()
     problem_list = []
     if number == 0:
         return problem_list
 
     per_score = score / number
     for bf in blank_fill:
-        p = make_problem(bf.id, 2, bf.difficult_level, bf.knowledge_points,
+        p = make_problem(bf.id, 2, bf.difficult_level, bf.points_id,
                          per_score)
         problem_list.append(p)
 
@@ -245,14 +242,14 @@ def make_bf_problem_list(subject, number, score):
 
 
 def make_es_problem_list(subject, number, score):
-    essay = Essay.query.filter_by(subject=subject).all()
+    essay = Essay.query.filter_by(subject_id=subject).all()
     problem_list = []
     if number == 0:
         return problem_list
 
     per_score = score / number
     for es in essay:
-        p = make_problem(es.id, 3, es.difficult_level, es.knowledge_points,
+        p = make_problem(es.id, 3, es.difficult_level, es.points_id,
                          per_score)
         problem_list.append(p)
 

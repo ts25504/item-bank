@@ -10,10 +10,10 @@ class SingleChoice(db.Model):
     add_date = db.Column(db.Date, default=date.today)
     faq = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    knowledge_points = db.Column(db.Integer)
-    subject = db.Column(db.Integer)
-    knowledge_points_name = db.Column(db.String(127))
-    subject_name = db.Column(db.String(127))
+    points_id = db.Column(db.Integer, db.ForeignKey('points.id'))
+    points = db.relationship('Points', backref='single_choice')
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))
+    subject = db.relationship('Subject', backref='single_choice')
 
     answer = db.Column(db.Enum('A', 'B', 'C', 'D'))
     A = db.Column(db.Text)
@@ -27,8 +27,8 @@ class SingleChoice(db.Model):
             'difficult_level': self.difficult_level,
             'faq': self.faq,
             'timestamp': self.timestamp,
-            'knowledge_points': self.knowledge_points_name,
-            'subject': self.subject_name,
+            'points': self.points.name,
+            'subject': self.subject.name,
             'answer': self.answer,
             'A': self.A,
             'B': self.B,
@@ -40,7 +40,6 @@ class SingleChoice(db.Model):
     @staticmethod
     def generate_fake(count=200):
         from random import seed, random, randint, choice
-        from models import Points, Subject
         import forgery_py
 
         seed()
@@ -48,18 +47,13 @@ class SingleChoice(db.Model):
             sc = SingleChoice(question=forgery_py.lorem_ipsum.sentence(),
                               difficult_level=random(),
                               faq=forgery_py.lorem_ipsum.sentence(),
-                              knowledge_points=randint(1, 10),
-                              subject=1,
+                              points_id=randint(1, 10),
+                              subject_id=1,
                               answer=choice(['A', 'B', 'C', 'D']),
                               A=forgery_py.lorem_ipsum.sentence(),
                               B=forgery_py.lorem_ipsum.sentence(),
                               C=forgery_py.lorem_ipsum.sentence(),
                               D=forgery_py.lorem_ipsum.sentence())
-
-            p = Points.query.filter_by(id=sc.knowledge_points).first()
-            sc.knowledge_points_name = p.name
-            s = Subject.query.filter_by(id=sc.subject).first()
-            sc.subject_name = s.name
 
             db.session.add(sc)
             db.session.commit()

@@ -6,8 +6,8 @@ class TestPaper(db.Model):
     __tablename__ = 'test_paper'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
-    subject = db.Column(db.Integer)
-    subject_name = db.Column(db.String(127))
+    subject = db.Column(db.Integer, db.ForeignKey('subject.id'))
+    subject_obj = db.relationship('Subject', backref='test_paper')
     single_choice = db.Column(db.String(255))
     blank_fill = db.Column(db.String(255))
     essay = db.Column(db.String(255))

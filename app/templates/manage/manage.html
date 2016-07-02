@@ -35,7 +35,7 @@
       <tr>
         <td>{{ p.id }}</td>
         <td>{{ p.name }}</td>
-        <td>{{ p.subject_name}}</td>
+        <td>{{ p.subject.name}}</td>
         <td></td>
         <td>
           <a href="{{ url_for('main.edit_point', id=p.id) }}">编辑</a>

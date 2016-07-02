@@ -14,7 +14,7 @@ def manage(subject_id):
     if subject_id == 0:
         Points_query = Points.query
     else:
-        Points_query = Points.query.filter_by(subject=subject_id)
+        Points_query = Points.query.filter_by(subject_id=subject_id)
 
     points = Points_query.all()
 
@@ -22,12 +22,11 @@ def manage(subject_id):
     subject_form = SubjectForm()
     point_form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if point_form.validate_on_submit():
-        s = Subject.query.filter_by(id=point_form.subject.data).first()
         point = Points(name=point_form.name.data,
-                       subject=point_form.subject.data, subject_name=s.name)
+                       subject_id=point_form.subject.data)
         db.session.add(point)
         db.session.commit()
-        return redirect(url_for('main.manage', subject_id=point.subject))
+        return redirect(url_for('main.manage', subject_id=point.subject_id))
 
     if subject_form.validate_on_submit():
         subject = Subject(name=subject_form.name.data)

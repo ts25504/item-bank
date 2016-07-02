@@ -19,7 +19,7 @@ def essay():
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
-        if p.subject != form.subject.data:
+        if p.subject_id != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.essay'))
 
@@ -27,14 +27,9 @@ def essay():
             question=form.question.data,
             difficult_level=form.difficult_level.data,
             faq=form.faq.data,
-            knowledge_points=form.knowledge_points.data,
-            subject=form.subject.data,
+            points_id=form.knowledge_points.data,
+            subject_id=form.subject.data,
             answer=form.answer.data)
-
-        p = Points.query.filter_by(id=essay.knowledge_points).first()
-        essay.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=essay.subject).first()
-        essay.subject_name = s.name
 
         db.session.add(essay)
         db.session.commit()
@@ -59,20 +54,15 @@ def edit_essay(id):
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
-        if p.subject != form.subject.data:
+        if p.subject_id != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.essay'))
         essay.question = form.question.data
         essay.difficult_level = form.difficult_level.data
         essay.faq = form.faq.data
-        essay.knowledge_points = form.knowledge_points.data
-        essay.subject = form.subject.data
+        essay.points_id = form.knowledge_points.data
+        essay.subject_id = form.subject.data
         essay.answer = form.answer.data
-
-        p = Points.query.filter_by(id=essay.knowledge_points).first()
-        essay.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=essay.subject).first()
-        essay.subject_name = s.name
 
         db.session.add(essay)
         db.session.commit()
@@ -81,8 +71,8 @@ def edit_essay(id):
     form.question.data = essay.question
     form.difficult_level.data = essay.difficult_level
     form.faq.data = essay.faq
-    form.knowledge_points.data = essay.knowledge_points
-    form.subject.data = essay.subject
+    form.knowledge_points.data = essay.points_id
+    form.subject.data = essay.subject_id
     form.answer.data = essay.answer
     return render_template('essay/edit_essay.html', form=form)
 

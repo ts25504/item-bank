@@ -19,7 +19,7 @@ def blank_fill():
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
-        if p.subject != form.subject.data:
+        if p.subject_id != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.blank_fill'))
 
@@ -27,14 +27,9 @@ def blank_fill():
             question=form.question.data,
             difficult_level=form.difficult_level.data,
             faq=form.faq.data,
-            knowledge_points=form.knowledge_points.data,
-            subject=form.subject.data,
+            points_id=form.knowledge_points.data,
+            subject_id=form.subject.data,
             answer=form.answer.data)
-
-        p = Points.query.filter_by(id=blank_fill.knowledge_points).first()
-        blank_fill.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=blank_fill.subject).first()
-        blank_fill.subject_name = s.name
 
         db.session.add(blank_fill)
         db.session.commit()
@@ -59,20 +54,15 @@ def edit_blank_fill(id):
     form.subject.choices = [(s.id, s.name) for s in Subject.query.all()]
     if form.validate_on_submit():
         p = Points.query.filter_by(id=form.knowledge_points.data).first()
-        if p.subject != form.subject.data:
+        if p.subject_id != form.subject.data:
             flash(u'知识点与课程不符')
             return redirect(url_for('main.blank_fill'))
         blank_fill.question = form.question.data
         blank_fill.difficult_level = form.difficult_level.data
         blank_fill.faq = form.faq.data
-        blank_fill.knowledge_points = form.knowledge_points.data
-        blank_fill.subject = form.subject.data
+        blank_fill.points_id = form.knowledge_points.data
+        blank_fill.subject_id = form.subject.data
         blank_fill.answer = form.answer.data
-
-        p = Points.query.filter_by(id=blank_fill.knowledge_points).first()
-        blank_fill.knowledge_points_name = p.name
-        s = Subject.query.filter_by(id=blank_fill.subject).first()
-        blank_fill.subject_name = s.name
 
         db.session.add(blank_fill)
         db.session.commit()
@@ -81,8 +71,8 @@ def edit_blank_fill(id):
     form.question.data = blank_fill.question
     form.difficult_level.data = blank_fill.difficult_level
     form.faq.data = blank_fill.faq
-    form.knowledge_points.data = blank_fill.knowledge_points
-    form.subject.data = blank_fill.subject
+    form.knowledge_points.data = blank_fill.points_id
+    form.subject.data = blank_fill.subject_id
     form.answer.data = blank_fill.answer
     return render_template('blank_fill/edit_blank_fill.html', form=form)
 
