@@ -36,12 +36,12 @@ class Essay(db.Model):
 
         seed()
         for i in range(count):
-            es = Essay(question=forgery_py.lorem_ipsum.sentence(),
+            es = Essay(question=forgery_py.lorem_ipsum.paragraph(),
                        difficult_level=random(),
                        faq=forgery_py.lorem_ipsum.sentence(),
                        points_id=randint(1, 10),
                        subject_id=1,
-                       answer=forgery_py.lorem_ipsum.sentence())
+                       answer=forgery_py.lorem_ipsum.paragraph())
 
             db.session.add(es)
             db.session.commit()
