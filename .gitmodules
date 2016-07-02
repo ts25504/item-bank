@@ -1,3 +1,3 @@
 [submodule "genetic-algorithm-py"]
-    path=genetic-algorithm-py
+    path=genetic_algorithm
     url=https://github.com/ts25504/genetic-algorithm-py.git
