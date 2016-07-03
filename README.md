@@ -1,5 +1,5 @@
 # Item Bank
-一个维护题库和自动组卷的Web app，基于Flask框架，使用MVC模式。
+一个维护题库和自动组卷的Web app，基于Flask 0.10，使用MVC模式。
 
 ## 如何使用
 1.安装Python：
