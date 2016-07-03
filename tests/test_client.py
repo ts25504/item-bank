@@ -2,6 +2,7 @@
 import re
 import unittest
 from app import create_app, db
+from app.model.user_model import User
 
 
 class ClientTestCase(unittest.TestCase):
@@ -16,6 +17,14 @@ class ClientTestCase(unittest.TestCase):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
+
+    def test_get_login(self):
+        response = self.client.get('/auth/login', follow_redirects=True)
+        self.assertTrue(re.search('登录', response.data))
+
+    def test_get_logout(self):
+        response = self.client.get('/auth/logout', follow_redirects=True)
+        self.assertTrue(re.search('您已经注销', response.data))
 
     def test_get_index(self):
         response = self.client.get('/index', follow_redirects=True)
@@ -40,3 +49,7 @@ class ClientTestCase(unittest.TestCase):
     def test_get_test_paper(self):
         response = self.client.get('/test_papers', follow_redirects=True)
         self.assertTrue(re.search('试卷管理', response.data))
+
+    def test_get_manage(self):
+        response = self.client.get('/manage/0', follow_redirects=True)
+        self.assertTrue(re.search('题库管理', response.data))
