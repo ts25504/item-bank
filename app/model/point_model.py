@@ -1,4 +1,5 @@
 from app import db
+from app.model.subject_model import Subject
 
 
 class Points(db.Model):
@@ -10,13 +11,13 @@ class Points(db.Model):
 
     @staticmethod
     def generate_fake(count=10):
-        from random import seed
+        from random import choice
         import forgery_py
 
-        seed()
+        subject_ids = [s.id for s in Subject.query.all()]
         for i in range(count):
             p = Points(name=forgery_py.lorem_ipsum.word(),
-                       subject_id=1)
+                       subject_id=choice(subject_ids))
 
             db.session.add(p)
             db.session.commit()

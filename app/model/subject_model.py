@@ -11,7 +11,6 @@ class Subject(db.Model):
         from random import seed
         import forgery_py
 
-        seed()
         for i in range(count):
             s = Subject(name=forgery_py.lorem_ipsum.word())
 

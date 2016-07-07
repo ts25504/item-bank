@@ -1,5 +1,7 @@
 from datetime import date, datetime
 from app import db
+from app.model.point_model import Points
+from app.model.subject_model import Subject
 
 
 class SingleChoice(db.Model):
@@ -39,16 +41,19 @@ class SingleChoice(db.Model):
 
     @staticmethod
     def generate_fake(count=200):
-        from random import seed, random, randint, choice
+        from random import seed, random, choice
         import forgery_py
+
+        subject_ids = [s.id for s in Subject.query.all()]
+        point_ids = [p.id for p in Points.query.all()]
 
         seed()
         for i in range(count):
             sc = SingleChoice(question=forgery_py.lorem_ipsum.sentence(),
                               difficult_level=random(),
                               faq=forgery_py.lorem_ipsum.sentence(),
-                              points_id=randint(1, 10),
-                              subject_id=1,
+                              points_id=choice(point_ids),
+                              subject_id=choice(subject_ids),
                               answer=choice(['A', 'B', 'C', 'D']),
                               A=forgery_py.lorem_ipsum.sentence(),
                               B=forgery_py.lorem_ipsum.sentence(),
