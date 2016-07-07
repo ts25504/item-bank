@@ -2,7 +2,6 @@
 import re
 import unittest
 from app import create_app, db
-from app.model.user_model import User
 
 
 class ClientTestCase(unittest.TestCase):
