@@ -63,3 +63,23 @@ python manage.py test
 ```sh
 python manage.py shell
 ```
+
+新建用户
+```sh
+python manage.py shell
+u = User()
+u.username = "xxx"
+u.password = "xxx"
+db.session.add(u)
+db.session.commit()
+```
+
+生成模拟数据
+```sh
+python manage.py shell
+Subject.generate_fake()
+Points.generate_fake()
+SingleChoice.generate_fake()
+BlankFill.generate_fake()
+Essay.generate_fake()
+```
