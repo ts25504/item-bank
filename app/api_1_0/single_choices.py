@@ -1,5 +1,5 @@
 from flask import jsonify, request, current_app, url_for
-from app.import db
+from app import db
 from app.api_1_0 import api
 from app.model.single_choice_model import SingleChoice
 
@@ -51,6 +51,7 @@ def edit_single_choice(id):
     db.session.commit()
     return jsonify(sc.to_json())
 
+
 @api.route('/single_choices/', methods=['POST'])
 def new_single_choice():
     sc = SingleChoice()
@@ -69,7 +70,9 @@ def new_single_choice():
     sc.D = request.json.get('D', sc.D)
     db.session.add(sc)
     db.session.commit()
-    return jsonify(sc.to_json())
+    return jsonify(sc.to_json(), 201, {'Location': url_for(
+        'api.get_single_choice', id=sc.id, _external=True)})
+
 
 @api.route('/single_choices/<int:id>', methods=['DELETE'])
 def delete_single_choice(id):

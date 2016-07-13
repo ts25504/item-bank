@@ -1,5 +1,5 @@
 from flask import jsonify, request, current_app, url_for
-from app.import db
+from app import db
 from app.api_1_0 import api
 from app.model.essay_model import Essay
 
@@ -47,6 +47,7 @@ def edit_essay(id):
     db.session.commit()
     return jsonify(es.to_json())
 
+
 @api.route('/essays/', methods=['POST'])
 def new_essay():
     es = Essay()
@@ -61,7 +62,9 @@ def new_essay():
     es.answer = request.json.get('answer', es.answer)
     db.session.add(es)
     db.session.commit()
-    return jsonify(es.to_json())
+    return jsonify(es.to_json(), 201, {'Location': url_for(
+        'api.get_essay', id=es.id, _external=True)})
+
 
 @api.route('/essays/<int:id>', methods=['DELETE'])
 def delete_essay(id):

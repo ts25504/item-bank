@@ -1,5 +1,5 @@
 from flask import jsonify, request, current_app, url_for
-from app.import db
+from app import db
 from app.api_1_0 import api
 from app.model.blank_fill_model import BlankFill
 
@@ -47,6 +47,7 @@ def edit_blank_fill(id):
     db.session.commit()
     return jsonify(bf.to_json())
 
+
 @api.route('/blank_fills/', methods=['POST'])
 def new_blank_fill():
     bf = BlankFill()
@@ -61,7 +62,9 @@ def new_blank_fill():
     bf.answer = request.json.get('answer', bf.answer)
     db.session.add(bf)
     db.session.commit()
-    return jsonify(bf.to_json())
+    return jsonify(bf.to_json(), 201, {'Location': url_for(
+        'api.get_blank_fill', id=bf.id, _external=True)})
+
 
 @api.route('/blank_fills/<int:id>', methods=['DELETE'])
 def delete_blank_fill(id):
