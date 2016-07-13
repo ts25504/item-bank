@@ -38,11 +38,34 @@ def edit_essay(id):
     es.difficult_level = request.json.get(
         'difficult_level', es.difficult_level)
     es.faq = request.json.get('faq', es.faq)
-    es.timestamp = request.json.get('timestamp', es.timestamp)
     es.knowledge_points = request.json.get(
         'knowledge_points', es.knowledge_points)
-    es.subject = request.json.get('subject', es.subject)
+    es.subject_id = request.json.get('subject', es.subject_id)
+    es.points_id = request.json.get('points', es.subject_id)
     es.answer = request.json.get('answer', es.answer)
-    db.session.add(sc)
+    db.session.add(es)
+    db.session.commit()
+    return jsonify(es.to_json())
+
+@api.route('/essays/', methods=['POST'])
+def new_essay():
+    es = Essay()
+    es.question = request.json.get('question', es.question)
+    es.difficult_level = request.json.get(
+        'difficult_level', es.difficult_level)
+    es.faq = request.json.get('faq', es.faq)
+    es.knowledge_points = request.json.get(
+        'knowledge_points', es.knowledge_points)
+    es.subject_id = request.json.get('subject', es.subject_id)
+    es.points_id = request.json.get('points', es.subject_id)
+    es.answer = request.json.get('answer', es.answer)
+    db.session.add(es)
+    db.session.commit()
+    return jsonify(es.to_json())
+
+@api.route('/essays/<int:id>', methods=['DELETE'])
+def delete_essay(id):
+    es = Essay.query.get_or_404(id)
+    db.session.delete(es)
     db.session.commit()
     return jsonify(es.to_json())

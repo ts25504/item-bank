@@ -38,15 +38,42 @@ def edit_single_choice(id):
     sc.difficult_level = request.json.get(
         'difficult_level', sc.difficult_level)
     sc.faq = request.json.get('faq', sc.faq)
-    sc.timestamp = request.json.get('timestamp', sc.timestamp)
     sc.knowledge_points = request.json.get(
         'knowledge_points', sc.knowledge_points)
-    sc.subject = request.json.get('subject', sc.subject)
+    sc.subject_id = request.json.get('subject', sc.subject_id)
+    sc.points_id = request.json.get('points', sc.points_id)
     sc.answer = request.json.get('answer', sc.answer)
     sc.A = request.json.get('A', sc.A)
     sc.B = request.json.get('B', sc.B)
     sc.C = request.json.get('C', sc.C)
     sc.D = request.json.get('D', sc.D)
     db.session.add(sc)
+    db.session.commit()
+    return jsonify(sc.to_json())
+
+@api.route('/single_choices/', methods=['POST'])
+def new_single_choice():
+    sc = SingleChoice()
+    sc.question = request.json.get('question', sc.question)
+    sc.difficult_level = request.json.get(
+        'difficult_level', sc.difficult_level)
+    sc.faq = request.json.get('faq', sc.faq)
+    sc.knowledge_points = request.json.get(
+        'knowledge_points', sc.knowledge_points)
+    sc.subject_id = request.json.get('subject', sc.subject_id)
+    sc.points_id = request.json.get('points', sc.points_id)
+    sc.answer = request.json.get('answer', sc.answer)
+    sc.A = request.json.get('A', sc.A)
+    sc.B = request.json.get('B', sc.B)
+    sc.C = request.json.get('C', sc.C)
+    sc.D = request.json.get('D', sc.D)
+    db.session.add(sc)
+    db.session.commit()
+    return jsonify(sc.to_json())
+
+@api.route('/single_choices/<int:id>', methods=['DELETE'])
+def delete_single_choice(id):
+    sc = SingleChoice.query.get_or_404(id)
+    db.session.delete(sc)
     db.session.commit()
     return jsonify(sc.to_json())
