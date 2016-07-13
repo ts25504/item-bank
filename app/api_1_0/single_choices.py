@@ -38,8 +38,6 @@ def edit_single_choice(id):
     sc.difficult_level = request.json.get(
         'difficult_level', sc.difficult_level)
     sc.faq = request.json.get('faq', sc.faq)
-    sc.knowledge_points = request.json.get(
-        'knowledge_points', sc.knowledge_points)
     sc.subject_id = request.json.get('subject', sc.subject_id)
     sc.points_id = request.json.get('points', sc.points_id)
     sc.answer = request.json.get('answer', sc.answer)
@@ -59,8 +57,6 @@ def new_single_choice():
     sc.difficult_level = request.json.get(
         'difficult_level', sc.difficult_level)
     sc.faq = request.json.get('faq', sc.faq)
-    sc.knowledge_points = request.json.get(
-        'knowledge_points', sc.knowledge_points)
     sc.subject_id = request.json.get('subject', sc.subject_id)
     sc.points_id = request.json.get('points', sc.points_id)
     sc.answer = request.json.get('answer', sc.answer)
@@ -70,8 +66,8 @@ def new_single_choice():
     sc.D = request.json.get('D', sc.D)
     db.session.add(sc)
     db.session.commit()
-    return jsonify(sc.to_json(), 201, {'Location': url_for(
-        'api.get_single_choice', id=sc.id, _external=True)})
+    return jsonify(sc.to_json()), 201, {'Location': url_for(
+        'api.get_single_choice', id=sc.id, _external=True)}
 
 
 @api.route('/single_choices/<int:id>', methods=['DELETE'])

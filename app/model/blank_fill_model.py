@@ -21,12 +21,13 @@ class BlankFill(db.Model):
 
     def to_json(self):
         json = {
+            'id': self.id,
             'question': self.question,
             'difficult_level': self.difficult_level,
             'faq': self.faq,
             'timestamp': self.timestamp,
-            'points': self.points.name,
-            'subject': self.subject.name,
+            'points': self.points_id,
+            'subject': self.subject_id,
             'answer': self.answer,
         }
         return json

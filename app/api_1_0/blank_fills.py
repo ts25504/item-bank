@@ -38,8 +38,6 @@ def edit_blank_fill(id):
     bf.difficult_level = request.json.get(
         'difficult_level', bf.difficult_level)
     bf.faq = request.json.get('faq', bf.faq)
-    bf.knowledge_points = request.json.get(
-        'knowledge_points', bf.knowledge_points)
     bf.subject_id = request.json.get('subject', bf.subject_id)
     bf.points_id = request.json.get('points', bf.points_id)
     bf.answer = request.json.get('answer', bf.answer)
@@ -55,15 +53,13 @@ def new_blank_fill():
     bf.difficult_level = request.json.get(
         'difficult_level', bf.difficult_level)
     bf.faq = request.json.get('faq', bf.faq)
-    bf.knowledge_points = request.json.get(
-        'knowledge_points', bf.knowledge_points)
     bf.subject_id = request.json.get('subject', bf.subject_id)
     bf.points_id = request.json.get('points', bf.points_id)
     bf.answer = request.json.get('answer', bf.answer)
     db.session.add(bf)
     db.session.commit()
-    return jsonify(bf.to_json(), 201, {'Location': url_for(
-        'api.get_blank_fill', id=bf.id, _external=True)})
+    return jsonify(bf.to_json()), 201, {'Location': url_for(
+        'api.get_blank_fill', id=bf.id, _external=True)}
 
 
 @api.route('/blank_fills/<int:id>', methods=['DELETE'])

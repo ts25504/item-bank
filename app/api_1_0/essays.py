@@ -38,8 +38,6 @@ def edit_essay(id):
     es.difficult_level = request.json.get(
         'difficult_level', es.difficult_level)
     es.faq = request.json.get('faq', es.faq)
-    es.knowledge_points = request.json.get(
-        'knowledge_points', es.knowledge_points)
     es.subject_id = request.json.get('subject', es.subject_id)
     es.points_id = request.json.get('points', es.subject_id)
     es.answer = request.json.get('answer', es.answer)
@@ -55,15 +53,13 @@ def new_essay():
     es.difficult_level = request.json.get(
         'difficult_level', es.difficult_level)
     es.faq = request.json.get('faq', es.faq)
-    es.knowledge_points = request.json.get(
-        'knowledge_points', es.knowledge_points)
     es.subject_id = request.json.get('subject', es.subject_id)
     es.points_id = request.json.get('points', es.subject_id)
     es.answer = request.json.get('answer', es.answer)
     db.session.add(es)
     db.session.commit()
-    return jsonify(es.to_json(), 201, {'Location': url_for(
-        'api.get_essay', id=es.id, _external=True)})
+    return jsonify(es.to_json()), 201, {'Location': url_for(
+        'api.get_essay', id=es.id, _external=True)}
 
 
 @api.route('/essays/<int:id>', methods=['DELETE'])
