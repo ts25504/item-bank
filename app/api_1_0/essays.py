@@ -1,4 +1,5 @@
 from flask import jsonify, request, current_app, url_for
+from app.import db
 from app.api_1_0 import api
 from app.model.essay_model import Essay
 
@@ -42,4 +43,6 @@ def edit_essay(id):
         'knowledge_points', es.knowledge_points)
     es.subject = request.json.get('subject', es.subject)
     es.answer = request.json.get('answer', es.answer)
+    db.session.add(sc)
+    db.session.commit()
     return jsonify(es.to_json())

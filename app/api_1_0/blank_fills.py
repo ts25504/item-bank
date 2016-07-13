@@ -1,4 +1,5 @@
 from flask import jsonify, request, current_app, url_for
+from app.import db
 from app.api_1_0 import api
 from app.model.blank_fill_model import BlankFill
 
@@ -42,4 +43,6 @@ def edit_blank_fill(id):
         'knowledge_points', bf.knowledge_points)
     bf.subject = request.json.get('subject', bf.subject)
     bf.answer = request.json.get('answer', bf.answer)
+    db.session.add(sc)
+    db.session.commit()
     return jsonify(bf.to_json())

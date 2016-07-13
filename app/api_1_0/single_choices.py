@@ -1,4 +1,5 @@
 from flask import jsonify, request, current_app, url_for
+from app.import db
 from app.api_1_0 import api
 from app.model.single_choice_model import SingleChoice
 
@@ -46,4 +47,6 @@ def edit_single_choice(id):
     sc.B = request.json.get('B', sc.B)
     sc.C = request.json.get('C', sc.C)
     sc.D = request.json.get('D', sc.D)
+    db.session.add(sc)
+    db.session.commit()
     return jsonify(sc.to_json())
