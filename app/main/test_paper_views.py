@@ -19,7 +19,7 @@ from genetic_algorithm.problem import Problem
 from genetic_algorithm.main import Genetic
 
 
-def handle_str(problems):
+def _handle_str(problems):
     problems = problems[1:]
     problems = problems[:-1]
     ids = problems.split(', ')
@@ -91,7 +91,7 @@ def edit_test_paper_sc(tp_id, id):
     if form.validate_on_submit():
         new_id = form.new_id.data
         test_paper = TestPaper.query.filter_by(id=tp_id).first()
-        p = handle_str(test_paper.single_choice)
+        p = _handle_str(test_paper.single_choice)
         for i in range(len(p)):
             if p[i] == new_id:
                 flash(u'试题重复')
@@ -118,7 +118,7 @@ def edit_test_paper_bf(tp_id, id):
     if form.validate_on_submit():
         new_id = form.new_id.data
         test_paper = TestPaper.query.filter_by(id=tp_id).first()
-        p = handle_str(test_paper.blank_fill)
+        p = _handle_str(test_paper.blank_fill)
         for i in range(len(p)):
             if p[i] == id:
                 p[i] = new_id
@@ -140,7 +140,7 @@ def edit_test_paper_es(tp_id, id):
     if form.validate_on_submit():
         new_id = form.new_id.data
         test_paper = TestPaper.query.filter_by(id=tp_id).first()
-        p = handle_str(test_paper.essay)
+        p = _handle_str(test_paper.essay)
         for i in range(len(p)):
             if p[i] == id:
                 p[i] = new_id
@@ -178,7 +178,7 @@ def new_test_paper(name, subject, difficulty, sc, bf, es):
     return render_template('common/index.html')
 
 
-def make_paper(points, difficulty, each_point_score, single_choice_number,
+def _make_paper(points, difficulty, each_point_score, single_choice_number,
                blank_fill_number, essay_number, single_choice_score,
                blank_fill_score, essay_score):
 
@@ -201,7 +201,7 @@ def make_paper(points, difficulty, each_point_score, single_choice_number,
     return paper
 
 
-def make_problem(id, type, difficulty, points, score):
+def _make_problem(id, type, difficulty, points, score):
     p = Problem()
     p.id = id
     p.type = type
@@ -211,7 +211,7 @@ def make_problem(id, type, difficulty, points, score):
     return p
 
 
-def make_sc_problem_list(subject, number, score):
+def _make_sc_problem_list(subject, number, score):
     single_choice = SingleChoice.query.filter_by(subject_id=subject).all()
     problem_list = []
     if number == 0:
@@ -219,14 +219,14 @@ def make_sc_problem_list(subject, number, score):
 
     per_score = score / number
     for sc in single_choice:
-        p = make_problem(sc.id, 1, sc.difficult_level, sc.points_id,
+        p = _make_problem(sc.id, 1, sc.difficult_level, sc.points_id,
                          per_score)
         problem_list.append(p)
 
     return problem_list
 
 
-def make_bf_problem_list(subject, number, score):
+def _make_bf_problem_list(subject, number, score):
     blank_fill = BlankFill.query.filter_by(subject_id=subject).all()
     problem_list = []
     if number == 0:
@@ -234,14 +234,14 @@ def make_bf_problem_list(subject, number, score):
 
     per_score = score / number
     for bf in blank_fill:
-        p = make_problem(bf.id, 2, bf.difficult_level, bf.points_id,
+        p = _make_problem(bf.id, 2, bf.difficult_level, bf.points_id,
                          per_score)
         problem_list.append(p)
 
     return problem_list
 
 
-def make_es_problem_list(subject, number, score):
+def _make_es_problem_list(subject, number, score):
     essay = Essay.query.filter_by(subject_id=subject).all()
     problem_list = []
     if number == 0:
@@ -249,26 +249,26 @@ def make_es_problem_list(subject, number, score):
 
     per_score = score / number
     for es in essay:
-        p = make_problem(es.id, 3, es.difficult_level, es.points_id,
+        p = _make_problem(es.id, 3, es.difficult_level, es.points_id,
                          per_score)
         problem_list.append(p)
 
     return problem_list
 
 
-def make_db(subject, single_choice_number, blank_fill_number, essay_number,
+def _make_db(subject, single_choice_number, blank_fill_number, essay_number,
             single_choice_score, blank_fill_score, essay_score):
 
     problem_list = []
-    problem_list += make_sc_problem_list(subject,
+    problem_list += _make_sc_problem_list(subject,
                                          single_choice_number,
                                          single_choice_score)
 
-    problem_list += make_bf_problem_list(subject,
+    problem_list += _make_bf_problem_list(subject,
                                          blank_fill_number,
                                          blank_fill_score)
 
-    problem_list += make_es_problem_list(subject,
+    problem_list += _make_es_problem_list(subject,
                                          essay_number,
                                          essay_score)
 
@@ -291,12 +291,12 @@ def do_generate_test_paper(form):
     points = form.points.data
     each_point_score = form.each_point_score.data
 
-    paper = make_paper(points, difficulty, each_point_score,
+    paper = _make_paper(points, difficulty, each_point_score,
                        single_choice_number, blank_fill_number,
                        essay_number, single_choice_score, blank_fill_score,
                        essay_score)
 
-    db = make_db(subject, single_choice_number, blank_fill_number,
+    db = _make_db(subject, single_choice_number, blank_fill_number,
                  essay_number, single_choice_score, blank_fill_score,
                  essay_score)
 
