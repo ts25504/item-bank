@@ -45,9 +45,9 @@ def test_papers():
 @login_required
 def test_paper(id):
     test_paper = TestPaper.query.get_or_404(id)
-    sc = handle_str(test_paper.single_choice)
-    bf = handle_str(test_paper.blank_fill)
-    es = handle_str(test_paper.essay)
+    sc = _handle_str(test_paper.single_choice)
+    bf = _handle_str(test_paper.blank_fill)
+    es = _handle_str(test_paper.essay)
     name = test_paper.name
     single_choice = []
     blank_fill = []
@@ -179,8 +179,8 @@ def new_test_paper(name, subject, difficulty, sc, bf, es):
 
 
 def _make_paper(points, difficulty, each_point_score, single_choice_number,
-               blank_fill_number, essay_number, single_choice_score,
-               blank_fill_score, essay_score):
+                blank_fill_number, essay_number, single_choice_score,
+                blank_fill_score, essay_score):
 
     paper = Paper()
     paper.id = 1
@@ -220,7 +220,7 @@ def _make_sc_problem_list(subject, number, score):
     per_score = score / number
     for sc in single_choice:
         p = _make_problem(sc.id, 1, sc.difficult_level, sc.points_id,
-                         per_score)
+                          per_score)
         problem_list.append(p)
 
     return problem_list
@@ -235,7 +235,7 @@ def _make_bf_problem_list(subject, number, score):
     per_score = score / number
     for bf in blank_fill:
         p = _make_problem(bf.id, 2, bf.difficult_level, bf.points_id,
-                         per_score)
+                          per_score)
         problem_list.append(p)
 
     return problem_list
@@ -250,27 +250,27 @@ def _make_es_problem_list(subject, number, score):
     per_score = score / number
     for es in essay:
         p = _make_problem(es.id, 3, es.difficult_level, es.points_id,
-                         per_score)
+                          per_score)
         problem_list.append(p)
 
     return problem_list
 
 
 def _make_db(subject, single_choice_number, blank_fill_number, essay_number,
-            single_choice_score, blank_fill_score, essay_score):
+             single_choice_score, blank_fill_score, essay_score):
 
     problem_list = []
     problem_list += _make_sc_problem_list(subject,
-                                         single_choice_number,
-                                         single_choice_score)
+                                          single_choice_number,
+                                          single_choice_score)
 
     problem_list += _make_bf_problem_list(subject,
-                                         blank_fill_number,
-                                         blank_fill_score)
+                                          blank_fill_number,
+                                          blank_fill_score)
 
     problem_list += _make_es_problem_list(subject,
-                                         essay_number,
-                                         essay_score)
+                                          essay_number,
+                                          essay_score)
 
     db = DB()
     db.create_from_problem_list(problem_list)
@@ -292,13 +292,13 @@ def do_generate_test_paper(form):
     each_point_score = form.each_point_score.data
 
     paper = _make_paper(points, difficulty, each_point_score,
-                       single_choice_number, blank_fill_number,
-                       essay_number, single_choice_score, blank_fill_score,
-                       essay_score)
+                        single_choice_number, blank_fill_number,
+                        essay_number, single_choice_score, blank_fill_score,
+                        essay_score)
 
     db = _make_db(subject, single_choice_number, blank_fill_number,
-                 essay_number, single_choice_score, blank_fill_score,
-                 essay_score)
+                  essay_number, single_choice_score, blank_fill_score,
+                  essay_score)
 
     genetic = Genetic(paper, db)
     u = genetic.run(0.98)

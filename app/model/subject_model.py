@@ -8,7 +8,6 @@ class Subject(db.Model):
 
     @staticmethod
     def generate_fake(count=1):
-        from random import seed
         import forgery_py
 
         for i in range(count):
