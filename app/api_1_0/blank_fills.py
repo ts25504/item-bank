@@ -67,4 +67,4 @@ def delete_blank_fill(id):
     bf = BlankFill.query.get_or_404(id)
     db.session.delete(bf)
     db.session.commit()
-    return jsonify(bf.to_json())
+    return jsonify(bf.to_json()), 204

@@ -67,4 +67,4 @@ def delete_essay(id):
     es = Essay.query.get_or_404(id)
     db.session.delete(es)
     db.session.commit()
-    return jsonify(es.to_json())
+    return jsonify(es.to_json()), 204

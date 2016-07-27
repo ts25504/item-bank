@@ -75,7 +75,7 @@ class APITestCase(unittest.TestCase):
         response = self.client.delete(
             url_for('api.delete_single_choice', id=id, _external=True),
             headers=self.get_api_headers())
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.status_code == 204)
 
         response = self.client.get(
             url,
@@ -122,7 +122,7 @@ class APITestCase(unittest.TestCase):
         response = self.client.delete(
             url_for('api.delete_blank_fill', id=id, _external=True),
             headers=self.get_api_headers())
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.status_code == 204)
 
         response = self.client.get(
             url,
@@ -169,7 +169,7 @@ class APITestCase(unittest.TestCase):
         response = self.client.delete(
             url_for('api.delete_essay', id=id, _external=True),
             headers=self.get_api_headers())
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.status_code == 204)
 
         response = self.client.get(
             url,

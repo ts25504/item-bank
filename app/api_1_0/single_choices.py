@@ -75,4 +75,4 @@ def delete_single_choice(id):
     sc = SingleChoice.query.get_or_404(id)
     db.session.delete(sc)
     db.session.commit()
-    return jsonify(sc.to_json())
+    return jsonify(sc.to_json()), 204
