@@ -28,6 +28,11 @@ class APITestCase(unittest.TestCase):
         }
 
     def test_single_choice(self):
+        response = self.client.get(
+            url_for('api.get_single_choices'),
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 200)
+
         response = self.client.post(
             url_for('api.new_single_choice'),
             headers=self.get_api_headers(),
@@ -83,6 +88,11 @@ class APITestCase(unittest.TestCase):
         self.assertTrue(response.status_code == 404)
 
     def test_blank_fill(self):
+        response = self.client.get(
+            url_for('api.get_blank_fills'),
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 200)
+
         response = self.client.post(
             url_for('api.new_blank_fill'),
             headers=self.get_api_headers(),
@@ -130,6 +140,11 @@ class APITestCase(unittest.TestCase):
         self.assertTrue(response.status_code == 404)
 
     def test_essay(self):
+        response = self.client.get(
+            url_for('api.get_essays'),
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 200)
+
         response = self.client.post(
             url_for('api.new_essay'),
             headers=self.get_api_headers(),
@@ -168,6 +183,88 @@ class APITestCase(unittest.TestCase):
 
         response = self.client.delete(
             url_for('api.delete_essay', id=id, _external=True),
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 204)
+
+        response = self.client.get(
+            url,
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 404)
+
+    def test_points(self):
+        response = self.client.get(
+            url_for('api.get_points'),
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 200)
+
+        response = self.client.post(
+            url_for('api.new_point'),
+            headers=self.get_api_headers(),
+            data=json.dumps({'name': 'test name',
+                             'subject': 1}))
+        self.assertTrue(response.status_code == 201)
+        url = response.headers.get('Location')
+        self.assertIsNotNone(url)
+
+        response = self.client.get(
+            url,
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 200)
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(json_response['name'] == 'test name')
+        self.assertTrue(json_response['subject'] == 1)
+        id = json_response['id']
+
+        response = self.client.put(
+            url,
+            headers=self.get_api_headers(),
+            data=json.dumps({'name': 'modified name'}))
+        self.assertTrue(response.status_code == 200)
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(json_response['name'] == 'modified name')
+
+        response = self.client.delete(
+            url_for('api.delete_point', id=id, _external=True),
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 204)
+
+        response = self.client.get(
+            url,
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 404)
+
+    def test_subject(self):
+        response = self.client.get(
+            url_for('api.get_subjects'),
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 200)
+
+        response = self.client.post(
+            url_for('api.new_subject'),
+            headers=self.get_api_headers(),
+            data=json.dumps({'name': 'test name'}))
+        self.assertTrue(response.status_code == 201)
+        url = response.headers.get('Location')
+        self.assertIsNotNone(url)
+
+        response = self.client.get(
+            url,
+            headers=self.get_api_headers())
+        self.assertTrue(response.status_code == 200)
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(json_response['name'] == 'test name')
+        id = json_response['id']
+
+        response = self.client.put(
+            url,
+            headers=self.get_api_headers(),
+            data=json.dumps({'name': 'modified name'}))
+        self.assertTrue(response.status_code == 200)
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(json_response['name'] == 'modified name')
+
+        response = self.client.delete(
+            url_for('api.delete_subject', id=id, _external=True),
             headers=self.get_api_headers())
         self.assertTrue(response.status_code == 204)
 

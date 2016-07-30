@@ -6,6 +6,13 @@ class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(127))
 
+    def to_json(self):
+        json = {
+            'id': self.id,
+            'name': self.name,
+        }
+        return json
+
     @staticmethod
     def generate_fake(count=1):
         import forgery_py

@@ -9,6 +9,14 @@ class Points(db.Model):
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))
     subject = db.relationship('Subject', backref='points')
 
+    def to_json(self):
+        json = {
+            'id': self.id,
+            'name': self.name,
+            'subject': self.subject_id,
+        }
+        return json
+
     @staticmethod
     def generate_fake(count=10):
         from random import choice
