@@ -36,16 +36,18 @@ class APITestCase(unittest.TestCase):
         response = self.client.post(
             url_for('api.new_single_choice'),
             headers=self.get_api_headers(),
-            data=json.dumps({'question': 'test question',
-                             'difficult_level': 0.5,
-                             'faq': 'test faq',
-                             'subject': 1,
-                             'points': 1,
-                             'answer': 'A',
-                             'A': 'test A',
-                             'B': 'test B',
-                             'C': 'test C',
-                             'D': 'test D'}))
+            data=json.dumps({
+                'question': 'test question',
+                'difficult_level': 0.5,
+                'faq': 'test faq',
+                'subject': 1,
+                'points': 1,
+                'answer': 'A',
+                'A': 'test A',
+                'B': 'test B',
+                'C': 'test C',
+                'D': 'test D'
+            }))
         self.assertTrue(response.status_code == 201)
         url = response.headers.get('Location')
         self.assertIsNotNone(url)
@@ -70,8 +72,10 @@ class APITestCase(unittest.TestCase):
         response = self.client.put(
             url,
             headers=self.get_api_headers(),
-            data=json.dumps({'question': 'modified question',
-                             'answer': 'B'}))
+            data=json.dumps({
+                'question': 'modified question',
+                'answer': 'B'
+            }))
         self.assertTrue(response.status_code == 200)
         json_response = json.loads(response.data.decode('utf-8'))
         self.assertTrue(json_response['question'] == 'modified question')
@@ -96,12 +100,14 @@ class APITestCase(unittest.TestCase):
         response = self.client.post(
             url_for('api.new_blank_fill'),
             headers=self.get_api_headers(),
-            data=json.dumps({'question': 'test question',
-                             'difficult_level': 0.5,
-                             'faq': 'test faq',
-                             'subject': 1,
-                             'points': 1,
-                             'answer': 'test answer'}))
+            data=json.dumps({
+                'question': 'test question',
+                'difficult_level': 0.5,
+                'faq': 'test faq',
+                'subject': 1,
+                'points': 1,
+                'answer': 'test answer'
+            }))
         self.assertTrue(response.status_code == 201)
         url = response.headers.get('Location')
         self.assertIsNotNone(url)
@@ -122,8 +128,10 @@ class APITestCase(unittest.TestCase):
         response = self.client.put(
             url,
             headers=self.get_api_headers(),
-            data=json.dumps({'question': 'modified question',
-                             'answer': 'modified answer'}))
+            data=json.dumps({
+                'question': 'modified question',
+                'answer': 'modified answer'
+            }))
         self.assertTrue(response.status_code == 200)
         json_response = json.loads(response.data.decode('utf-8'))
         self.assertTrue(json_response['question'] == 'modified question')
@@ -148,12 +156,14 @@ class APITestCase(unittest.TestCase):
         response = self.client.post(
             url_for('api.new_essay'),
             headers=self.get_api_headers(),
-            data=json.dumps({'question': 'test question',
-                             'difficult_level': 0.5,
-                             'faq': 'test faq',
-                             'subject': 1,
-                             'points': 1,
-                             'answer': 'test answer'}))
+            data=json.dumps({
+                'question': 'test question',
+                'difficult_level': 0.5,
+                'faq': 'test faq',
+                'subject': 1,
+                'points': 1,
+                'answer': 'test answer'
+            }))
         self.assertTrue(response.status_code == 201)
         url = response.headers.get('Location')
         self.assertIsNotNone(url)
@@ -174,8 +184,10 @@ class APITestCase(unittest.TestCase):
         response = self.client.put(
             url,
             headers=self.get_api_headers(),
-            data=json.dumps({'question': 'modified question',
-                             'answer': 'modified answer'}))
+            data=json.dumps({
+                'question': 'modified question',
+                'answer': 'modified answer'
+            }))
         self.assertTrue(response.status_code == 200)
         json_response = json.loads(response.data.decode('utf-8'))
         self.assertTrue(json_response['question'] == 'modified question')
@@ -200,8 +212,10 @@ class APITestCase(unittest.TestCase):
         response = self.client.post(
             url_for('api.new_point'),
             headers=self.get_api_headers(),
-            data=json.dumps({'name': 'test name',
-                             'subject': 1}))
+            data=json.dumps({
+                'name': 'test name',
+                'subject': 1
+            }))
         self.assertTrue(response.status_code == 201)
         url = response.headers.get('Location')
         self.assertIsNotNone(url)
